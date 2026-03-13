@@ -1,7 +1,7 @@
 // Isolated styles for sidebar only
 #sidebar {
   &.sidebar-bg {
-    background-image: url("sidebar-background.webp");
+    background-image: url("bg_sidebar.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -24,7 +24,7 @@
     }
 
     .nav-link.active {
-      background-color: #155e1a;
+      background-color: #1f5385;
       color: #fff !important;
       font-weight: 400;
     }
