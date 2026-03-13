@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gem "rails", "~> 8.1.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
+# Compile SCSS to CSS [https://github.com/rails/dartsass-rails]
+gem "dartsass-rails"
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.6'
 
@@ -24,6 +26,9 @@ gem 'bcrypt', '~> 3.1.21'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
+# Use SQLite for Solid Cache, Queue, and Cable storage
+gem "sqlite3", ">= 2.1"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
@@ -35,7 +40,7 @@ gem "bootsnap", require: false
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
 
-# Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
+# Add HTTP asset caching/compression and target forwarding with Thruster [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
@@ -61,12 +66,6 @@ gem 'strong_migrations'
 
 # Bootstrap 5 framework integration
 gem 'bootstrap', '~> 5.3'
-
-# Sass compiler for CSS preprocessing (required for Bootstrap SCSS)
-gem 'sassc-rails'
-
-# Font Awesome
-gem 'font-awesome-rails'
 
 # For handling PDF on Payslip Module
 gem 'grover'

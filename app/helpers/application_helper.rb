@@ -1,6 +1,14 @@
 module ApplicationHelper
   include Pagy::Method
 
+  def safe_image_tag(source, **options)
+    return unless source.present?
+
+    image_tag(source, **options)
+  rescue Propshaft::MissingAssetError
+    content_tag(:span, options[:alt] || "Image", class: options[:class])
+  end
+
   # Check if current page matches any of the given paths
   def active_nav_item?(*paths)
     paths.any? { |path| current_page?(path) }
@@ -21,5 +29,33 @@ module ApplicationHelper
   # Returns a policy instance for the given record and policy class
   def record_policy(record, policy_class)
     policy_class.new(current_user, record)
+  end
+
+  # Modal configuration for shared modal component
+  def modal_config(id:, default_size: "modal-lg", centered: true)
+    {
+      id: id,
+      default_size: default_size,
+      centered: centered
+    }
+  end
+
+  # Data attributes for links that open modals via Turbo Frames
+  def modal_link_data(size: "modal-lg")
+    {
+      turbo_frame: "modal",
+      action: "turbo:before-fetch-request->modal#setSize",
+      modal_size_param: size
+    }
+  end
+
+  # Per-page selector for pagination
+  def per_page_selector(current: 10)
+    options = [10, 25, 50, 100]
+    select_tag :per_page,
+               options_for_select(options, current.to_i),
+               class: "form-select form-select-sm",
+               style: "width: auto;",
+               onchange: "this.form ? this.form.submit() : (window.location.search = '?per_page=' + this.value)"
   end
 end

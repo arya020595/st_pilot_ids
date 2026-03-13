@@ -1,0 +1,3 @@
+<%= turbo_stream.prepend "roles-table-body", partial: "role_row", locals: { role: @role } %>
+<%= turbo_stream.update "modal", "" %>
+<%= turbo_stream.update "flash_messages", partial: "shared/flash" %>

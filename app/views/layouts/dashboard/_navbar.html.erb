@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+  <div class="container-fluid">
+    <% if ENV["APP_LOGO_WEBP_URL"].present? %>
+      <%= safe_image_tag ENV["APP_LOGO_WEBP_URL"], alt: "#{ENV['APP_COMPANY_NAME']} Logo", class: "d-inline-block align-text-top me-2", height: "70" %>
+    <% end %>
+    <button id="sidebarToggle" class="btn btn-outline-primary me-2" type="button">
+      <i class="bi bi-list"></i>
+    </button>
+    <div class="ms-auto d-flex align-items-center">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown user-account-box">
+          <a class="nav-link dropdown-toggle text-dark d-flex align-items-center"
+          href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+          style="border: 0; outline: 0; box-shadow: none;">
+            <i class="bi bi-person-circle"
+            style="color: #29B6F6; font-size: 24px; margin-right: 10px;"></i>
+            <span><%= current_user.name %></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><%= link_to "Profile", edit_user_registration_path, class: "dropdown-item" %></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

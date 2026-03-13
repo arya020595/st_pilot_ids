@@ -1,0 +1,10 @@
+<%# Shared Modal Component %>
+<%# Usage: render "shared/modal", id: "myModal", default_size: "modal-lg", centered: true %>
+<div class="modal fade" id="<%= id %>" tabindex="-1" aria-labelledby="<%= id %>Label" aria-hidden="true"
+     data-controller="modal" data-modal-default-size-value="<%= default_size %>">
+  <div class="modal-dialog <%= default_size %><%= ' modal-dialog-centered' if centered %>">
+    <div class="modal-content">
+      <%= turbo_frame_tag "modal" %>
+    </div>
+  </div>
+</div>

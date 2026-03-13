@@ -1,0 +1,19 @@
+/* Dashboard Sidebar Styles */
+
+/* Rotate chevron when section expanded */
+.nav-link .collapse-chevron {
+  transition: transform 0.2s ease;
+}
+
+.nav-link[aria-expanded="true"] .collapse-chevron {
+  transform: rotate(90deg);
+}
+
+.dashboard h1 {
+  background-color: #155e1a;
+  color: #ffffff;
+  padding: 20px;
+  font-size: 20px;
+  border-radius: 10px;
+  font-weight: 900;
+}

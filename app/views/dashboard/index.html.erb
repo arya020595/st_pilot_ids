@@ -1,0 +1,65 @@
+<div class="container py-4">
+  <h1 class="mb-4">Dashboard</h1>
+  <!-- Welcome Card -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Welcome, <%= current_user.name %>!</h5>
+          <p class="card-text text-muted">You are logged in to ST <%= ENV['APP_COMPANY_NAME'] %>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Statistics Cards (placeholder) -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3 text-center">
+      <div class="card text-bg-primary">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Total Users</h5>
+          <p class="card-text display-4 text-white"><%= User.count %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="card text-bg-success">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Active Roles</h5>
+          <p class="card-text display-4 text-white"><%= Role.count %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="card text-bg-warning">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Permissions</h5>
+          <p class="card-text display-4 text-white"><%= Permission.count %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="card text-bg-info">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">System</h5>
+          <p class="card-text display-4 text-white"><i class="bi bi-check-circle"></i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Quick Actions -->
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex gap-2">
+            <%= link_to "Manage Users", user_management_users_path, class: "btn btn-primary" %>
+            <%= link_to "Manage Roles", user_management_roles_path, class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
