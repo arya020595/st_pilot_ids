@@ -6,7 +6,7 @@
       <div class="d-flex justify-content-end">
         <% if record_policy(User.new, UserManagement::UserPolicy).new? %>
           <%= link_to new_user_management_user_path, class: "add-button btn btn-primary btn-sm",
-              data: { turbo_frame: "modal" } do %>
+              **modal_link_data(size: 'modal-lg') do %>
             <i class="bi bi-plus-circle-fill text-white me-1"></i>Add User
           <% end %>
         <% end %>
@@ -28,7 +28,9 @@
                 </tr>
                 <tr>
                   <th class="text-center">
-                    <%= link_to 'Reset', user_management_users_path, class: 'btn reset-btn', style: 'font-weight: normal; width: 100px;' %>
+                    <div class="d-flex gap-1 justify-content-center">
+                      <%= link_to 'Reset', user_management_users_path, class: 'btn reset-btn', style: 'font-weight: normal; width: 100px;' %>
+                    </div>
                   </th>
                   <th class="text-center">
                     <%= f.number_field :id_eq, class: 'form-control form-control-sm', placeholder: 'ID', min: 1 %>

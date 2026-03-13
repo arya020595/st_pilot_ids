@@ -32,20 +32,25 @@ module ApplicationHelper
   end
 
   # Modal configuration for shared modal component
-  def modal_config(id:, default_size: "modal-lg", centered: true)
+  def modal_config(id:, default_size: "modal-lg", frame_id: "modal",
+                   backdrop: "static", keyboard: false, centered: true)
     {
-      id: id,
+      modal_id: id,
       default_size: default_size,
+      frame_id: frame_id,
+      backdrop: backdrop,
+      keyboard: keyboard,
       centered: centered
     }
   end
 
   # Data attributes for links that open modals via Turbo Frames
-  def modal_link_data(size: "modal-lg")
+  def modal_link_data(size: "modal-lg", frame: "modal")
     {
-      turbo_frame: "modal",
-      action: "turbo:before-fetch-request->modal#setSize",
-      modal_size_param: size
+      data: {
+        turbo_frame: frame,
+        modal_size: size
+      }
     }
   end
 

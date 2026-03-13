@@ -1,4 +1,4 @@
-/* Dashboard Sidebar Styles */
+/* Dashboard Styles */
 
 /* Rotate chevron when section expanded */
 .nav-link .collapse-chevron {
@@ -16,4 +16,315 @@
   font-size: 20px;
   border-radius: 10px;
   font-weight: 900;
+}
+
+// ── Shared page styles (users, roles, etc.) ──
+
+#users {
+  .users_page {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+  }
+
+  .users_page h1 {
+    background-color: #1f5385;
+    color: #ffffff;
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    font-weight: 900;
+    margin-bottom: 30px;
+  }
+
+  .add-button {
+    background-color: #1f5385;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    float: right;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    border: 0;
+  }
+
+  .card-body {
+    margin-top: -10px;
+    padding: 2px;
+  }
+
+  .add-button:hover {
+    background-color: #163d63;
+    text-decoration: none;
+    color: #ffffff;
+  }
+
+  .table thead.header-row th a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+  }
+
+  .header-row th {
+    padding: 15px 10px;
+    text-decoration: none;
+    color: #ffffff !important;
+  }
+
+  .table thead tr.header-row th {
+    background-color: #1f5385;
+    color: #ffffff;
+  }
+
+  th .filter-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #users-table-body tr td,
+  #users-table-body tr th {
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: middle;
+  }
+
+  .btn.filter-btn {
+    background-color: #1f5385;
+    color: #ffffff;
+  }
+
+  .btn.reset-btn {
+    background-color: #0d6efd;
+    color: #ffffff;
+    width: 90%;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .action-btn i {
+    font-size: 18px;
+  }
+
+  .action-btn.info i {
+    color: #0d6efd;
+  }
+
+  .action-btn.warning i {
+    color: #ffc107;
+  }
+
+  .action-btn.danger i {
+    color: #dc3545;
+  }
+
+  .action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .pagination .page-link {
+    color: #1f5385;
+    background-color: #dce8f3;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-link:hover {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    color: #999999;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+}
+
+#roles {
+  .roles_page {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+  }
+
+  .roles_page h1 {
+    background-color: #1f5385;
+    color: #ffffff;
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 10px;
+    font-weight: 900;
+    margin-bottom: 30px;
+  }
+
+  .add-button {
+    background-color: #1f5385;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    float: right;
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #ffffff;
+    border: 0;
+  }
+
+  .add-button:hover {
+    background-color: #163d63;
+    text-decoration: none;
+    color: #ffffff;
+  }
+
+  .card-body {
+    margin-top: -40px;
+  }
+
+  .table thead.header-row th a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+  }
+
+  .header-row th {
+    padding: 15px 10px;
+    text-decoration: none;
+    color: #ffffff !important;
+  }
+
+  .table thead tr.header-row th {
+    background-color: #1f5385;
+    color: #ffffff;
+  }
+
+  th .filter-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #roles-table-body tr td,
+  #roles-table-body tr th {
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: middle;
+  }
+
+  .btn.filter-btn {
+    background-color: #1f5385;
+    color: #ffffff;
+  }
+
+  .btn.reset-btn {
+    background-color: #0d6efd;
+    color: #ffffff;
+    width: 90%;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .action-btn i {
+    font-size: 18px;
+  }
+
+  .action-btn.info i {
+    color: #0d6efd;
+  }
+
+  .action-btn.warning i {
+    color: #ffc107;
+  }
+
+  .action-btn.danger i {
+    color: #dc3545;
+  }
+
+  .action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .pagination .page-link {
+    color: #1f5385;
+    background-color: #dce8f3;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-link:hover {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    color: #999999;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+}
+
+// ── Permission Section in Role Form ──
+.permission-section-header {
+  background-color: #1f5385;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+// ── Btn overrides ──
+.btn-primary {
+  background-color: #1f5385;
+  border-color: #1f5385;
+
+  &:hover {
+    background-color: #163d63;
+    border-color: #163d63;
+  }
+}
+
+.btn-outline-primary {
+  color: #1f5385;
+  border-color: #1f5385;
+
+  &:hover {
+    background-color: #1f5385;
+    color: #ffffff;
+  }
+}
+
+.btn-success {
+  background-color: #1f5385;
+  border-color: #1f5385;
+
+  &:hover {
+    background-color: #163d63;
+    border-color: #163d63;
+  }
 }

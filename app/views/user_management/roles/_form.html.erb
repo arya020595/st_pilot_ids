@@ -32,7 +32,7 @@
             <% Permission.all.group_by { |p| p.code.split('.')[0...-1].join('.') }.sort.each do |resource, perms| %>
               <% section_counter += 1 %>
               <tr>
-                <td colspan="2" style="font-size: 1.1rem; background-color: #28a745; color: white; font-weight: bold;">
+                <td colspan="2" class="permission-section-header" style="font-size: 1.1rem;">
                   <%= "#{section_counter}. #{resource.upcase.tr('.', ' > ')}" %>
                 </td>
               </tr>
