@@ -1,0 +1,185 @@
+#staff_profiles {
+  max-width: 100%;
+  overflow-x: hidden;
+
+  .staff_profiles_page {
+    padding: 0;
+  }
+
+  .staff_profiles_page h1 {
+    background-color: #1f5385;
+    color: #ffffff;
+    padding: 14px 20px;
+    font-size: 34px;
+    border-radius: 8px;
+    font-weight: 900;
+    margin-bottom: 18px;
+    line-height: 1.1;
+  }
+
+  .table-responsive.staff-profile-table-wrap {
+    margin-top: 14px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+
+  .staff-profile-table {
+    min-width: 1400px;
+    margin-bottom: 0;
+  }
+
+  .staff-action-col {
+    width: 64px;
+    min-width: 64px;
+  }
+
+  .staff-id-col {
+    width: 140px;
+    min-width: 140px;
+  }
+
+  .table thead tr.header-row th {
+    background-color: #1f5385;
+    color: #ffffff;
+    text-align: center;
+    padding: 11px 10px;
+    vertical-align: middle;
+    font-weight: 700;
+    border-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .table thead tr.header-row th a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 700;
+  }
+
+  .staff-filter-row th {
+    background-color: #1f5385;
+    padding: 8px 8px;
+    vertical-align: middle;
+    border-bottom: 0;
+  }
+
+  .staff-filter-row .form-control {
+    min-width: 110px;
+    font-size: 14px;
+    border-color: #d7e2ef;
+  }
+
+  .staff-filter-row .form-control::placeholder {
+    color: #6c757d;
+  }
+
+  #staff-profiles-table-body tr td,
+  #staff-profiles-table-body tr th {
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: top;
+    border-bottom: 1px solid #d8dee8;
+  }
+
+  #staff-profiles-table-body tr td:nth-child(3),
+  #staff-profiles-table-body tr td:nth-child(4),
+  #staff-profiles-table-body tr td:nth-child(6),
+  #staff-profiles-table-body tr td:nth-child(7),
+  #staff-profiles-table-body tr td:nth-child(8),
+  #staff-profiles-table-body tr td:nth-child(10) {
+    text-align: left;
+  }
+
+  .staff-info-icon {
+    color: #1f5385;
+    font-size: 17px;
+  }
+
+  .action-btn {
+    background: none;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .staff-id-value {
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+
+  .btn.filter-btn {
+    background-color: #1f5385;
+    color: #ffffff;
+    border-color: #1f5385;
+    min-width: 86px;
+  }
+
+  .btn.filter-btn:hover {
+    background-color: #163d63;
+    color: #ffffff;
+    border-color: #163d63;
+  }
+
+  .btn.reset-btn {
+    background-color: #0d6efd;
+    color: #ffffff;
+    border-color: #0d6efd;
+    min-width: 86px;
+  }
+
+  .btn.reset-btn:hover {
+    background-color: #0b5ed7;
+    color: #ffffff;
+    border-color: #0b5ed7;
+  }
+
+  .per-page-control {
+    min-width: 70px;
+  }
+
+  .pagination {
+    margin-bottom: 0;
+  }
+
+  .pagination .page-link {
+    color: #1f5385;
+    background-color: #ffffff;
+    border-color: #c7d0dd;
+  }
+
+  .pagination .page-link:hover {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    color: #8a95a5;
+    background-color: #f8f9fa;
+    border-color: #d4dae3;
+  }
+}
+
+.dashboard-main-content {
+  min-width: 0;
+}
