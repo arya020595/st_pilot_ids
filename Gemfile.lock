@@ -148,6 +148,7 @@ GEM
     ffi (1.17.3-aarch64-linux-musl)
     ffi (1.17.3-arm-linux-gnu)
     ffi (1.17.3-arm-linux-musl)
+    ffi (1.17.3-x64-mingw-ucrt)
     ffi (1.17.3-x86_64-linux-gnu)
     ffi (1.17.3-x86_64-linux-musl)
     fugit (1.12.1)
@@ -162,6 +163,9 @@ GEM
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.34.0-aarch64-linux-musl)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.34.0-x64-mingw-ucrt)
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.34.0-x86_64-linux-gnu)
@@ -257,6 +261,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.1-arm-linux-musl)
       racc (~> 1.4)
+    nokogiri (1.19.1-x64-mingw-ucrt)
+      racc (~> 1.4)
     nokogiri (1.19.1-x86_64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.1-x86_64-linux-musl)
@@ -276,6 +282,7 @@ GEM
     pg (1.6.3)
     pg (1.6.3-aarch64-linux)
     pg (1.6.3-aarch64-linux-musl)
+    pg (1.6.3-x64-mingw-ucrt)
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
     popper_js (2.11.8)
@@ -399,6 +406,8 @@ GEM
       google-protobuf (~> 4.31)
     sass-embedded (1.98.0-arm-linux-musleabihf)
       google-protobuf (~> 4.31)
+    sass-embedded (1.98.0-x64-mingw-ucrt)
+      google-protobuf (~> 4.31)
     sass-embedded (1.98.0-x86_64-linux-gnu)
       google-protobuf (~> 4.31)
     sass-embedded (1.98.0-x86_64-linux-musl)
@@ -453,6 +462,7 @@ GEM
     sqlite3 (2.9.1-aarch64-linux-musl)
     sqlite3 (2.9.1-arm-linux-gnu)
     sqlite3 (2.9.1-arm-linux-musl)
+    sqlite3 (2.9.1-x64-mingw-ucrt)
     sqlite3 (2.9.1-x86_64-linux-gnu)
     sqlite3 (2.9.1-x86_64-linux-musl)
     sshkit (1.25.0)
@@ -479,6 +489,8 @@ GEM
       railties (>= 7.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2026.1)
+      tzinfo (>= 1.0.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
@@ -512,6 +524,7 @@ PLATFORMS
   aarch64-linux-musl
   arm-linux-gnu
   arm-linux-musl
+  x64-mingw-ucrt
   x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
