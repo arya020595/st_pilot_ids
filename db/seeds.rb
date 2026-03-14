@@ -4,10 +4,10 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-puts "Seeding database..."
+puts 'Seeding database...'
 
 # Create Permissions
-puts "Creating permissions..."
+puts 'Creating permissions...'
 permissions_data = [
   { code: 'dashboard.index', name: 'View Dashboard' },
   { code: 'staff_profiles.index', name: 'View Staff Profile' },
@@ -31,7 +31,7 @@ end
 puts "  Created #{Permission.count} permissions"
 
 # Create Roles
-puts "Creating roles..."
+puts 'Creating roles...'
 superadmin_role = Role.find_or_create_by!(name: 'superadmin')
 
 # Assign all permissions to superadmin
@@ -41,7 +41,7 @@ end
 puts "  Created #{Role.count} roles"
 
 # Create default superadmin user
-puts "Creating default superadmin user..."
+puts 'Creating default superadmin user...'
 User.find_or_create_by!(email: 'admin@pilotids.com') do |user|
   user.name = 'Super Admin'
   user.password = 'password123'
@@ -51,7 +51,7 @@ User.find_or_create_by!(email: 'admin@pilotids.com') do |user|
 end
 
 # Create Staff Profiles
-puts "Creating staff profiles..."
+puts 'Creating staff profiles...'
 staff_profiles_data = [
   {
     email: 'amirul_ids@gmail.com', fullname: 'Amirul Amirajafri', grade: '48',
@@ -168,5 +168,5 @@ staff_profiles_data.each do |profile|
 end
 
 puts "  Created #{StaffProfile.count} staff profiles"
-puts "Seeding completed!"
-puts "  Default login: admin@pilotids.com / password123"
+puts 'Seeding completed!'
+puts '  Default login: admin@pilotids.com / password123'
