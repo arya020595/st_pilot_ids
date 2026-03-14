@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Domain model for staff profile records.
 class StaffProfile < ApplicationRecord
   self.primary_key = 'staff_profile_id'
 

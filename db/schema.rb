@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/BlockLength
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -81,3 +84,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_000005) do
   add_foreign_key "role_permissions", "roles"
   add_foreign_key "users", "roles"
 end
+# rubocop:enable Metrics/BlockLength

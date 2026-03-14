@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Controller for Staff Profile listing and detail views.
 class StaffProfilesController < ApplicationController
   before_action :set_staff_profile, only: [:show]
 
