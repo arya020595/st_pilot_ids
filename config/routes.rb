@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   # Dashboard
   get 'dashboard', to: 'dashboard#index'
 
+  # Staff Profile
+  resources :staff_profiles, only: [:index, :show]
+
   # User Management Namespace
   namespace :user_management do
     resources :roles do
