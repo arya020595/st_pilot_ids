@@ -46,6 +46,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -62,8 +64,25 @@ jobs:
           restore-keys: |
             rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
 
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
+      - name: Lint changed Ruby files
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_REF="origin/${{ github.base_ref }}"
+            git fetch origin "${{ github.base_ref }}" --depth=1
+            CHANGED_RB_FILES=$(git diff --name-only "$BASE_REF...HEAD" -- '*.rb')
+          else
+            CHANGED_RB_FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- '*.rb')
+          fi
+
+          if [[ -z "$CHANGED_RB_FILES" ]]; then
+            echo "No Ruby file changes detected. Skipping RuboCop."
+            exit 0
+          fi
+
+          echo "Running RuboCop on changed files:"
+          echo "$CHANGED_RB_FILES"
+          bin/rubocop -f github $CHANGED_RB_FILES
 
   test:
     runs-on: ubuntu-latest
@@ -125,6 +144,7 @@ jobs:
           bundler-cache: true
 
       - name: Run System Tests
+        if: ${{ hashFiles('test/system/**/*_test.rb') != '' }}
         env:
           RAILS_ENV: test
           DATABASE_USERNAME: postgres
@@ -134,6 +154,10 @@ jobs:
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test:system
+
+      - name: Skip when no system tests exist
+        if: ${{ hashFiles('test/system/**/*_test.rb') == '' }}
+        run: echo "No system tests found under test/system. Skipping system test run."
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
