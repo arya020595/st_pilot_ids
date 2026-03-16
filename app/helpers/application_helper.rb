@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   include Pagy::Method
 
@@ -6,7 +8,7 @@ module ApplicationHelper
 
     image_tag(source, **options)
   rescue Propshaft::MissingAssetError
-    content_tag(:span, options[:alt] || "Image", class: options[:class])
+    content_tag(:span, options[:alt] || 'Image', class: options[:class])
   end
 
   # Check if current page matches any of the given paths
@@ -32,8 +34,8 @@ module ApplicationHelper
   end
 
   # Modal configuration for shared modal component
-  def modal_config(id:, default_size: "modal-lg", frame_id: "modal",
-                   backdrop: "static", keyboard: false, centered: true)
+  def modal_config(id:, default_size: 'modal-lg', frame_id: 'modal',
+                   backdrop: 'static', keyboard: false, centered: true)
     {
       modal_id: id,
       default_size: default_size,
@@ -45,7 +47,7 @@ module ApplicationHelper
   end
 
   # Data attributes for links that open modals via Turbo Frames
-  def modal_link_data(size: "modal-lg", frame: "modal")
+  def modal_link_data(size: 'modal-lg', frame: 'modal')
     {
       data: {
         turbo_frame: frame,
@@ -59,8 +61,8 @@ module ApplicationHelper
     options = [10, 25, 50, 100]
     select_tag :per_page,
                options_for_select(options, current.to_i),
-               class: "form-select form-select-sm",
-               style: "width: auto;",
+               class: 'form-select form-select-sm',
+               style: 'width: auto;',
                onchange: "this.form ? this.form.submit() : (window.location.search = '?per_page=' + this.value)"
   end
 end

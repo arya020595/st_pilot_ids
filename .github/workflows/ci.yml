@@ -75,8 +75,8 @@ jobs:
             CHANGED_RB_FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- '*.rb')
           fi
 
-          # Skip auto-generated schema file from strict style linting.
-          CHANGED_RB_FILES=$(echo "$CHANGED_RB_FILES" | grep -v '^db/schema.rb$' || true)
+          # Skip auto-generated schema files from linting.
+          CHANGED_RB_FILES=$(echo "$CHANGED_RB_FILES" | grep -v '^db/schema.rb$' | grep -v '^db/cable_schema.rb$' | grep -v '^db/cache_schema.rb$' | grep -v '^db/queue_schema.rb$' || true)
 
           if [[ -z "$CHANGED_RB_FILES" ]]; then
             echo "No Ruby file changes detected. Skipping RuboCop."

@@ -72,15 +72,29 @@ Style/RedundantCondition:
   Enabled: true
   AutoCorrect: true
 
-# Documentation expectations: allow missing docs for migrations, tests, seeds, rake tasks
+# Documentation: disabled project-wide — inline comments preferred over class-level docs
 Style/Documentation:
-  Enabled: true
-  Exclude:
-    - "db/migrate/**/*"
-    - "test/**/*"
-    - "db/seeds/**/*"
-    - "lib/tasks/**/*"
-    - "tmp/**/*"
+  Enabled: false
+
+# String literals: double quotes are allowed — consistency over strictness
+Style/StringLiterals:
+  Enabled: false
+
+# Naming: has_* prefix is idiomatic Ruby for permission checks; renaming breaks the permission API
+Naming/PredicatePrefix:
+  Enabled: false
+
+# Safe navigation: allow longer chains in policy/helper code
+Style/SafeNavigationChainLength:
+  Enabled: false
+
+# Numeric literals: thousands separator not required
+Style/NumericLiterals:
+  Enabled: false
+
+# Word arrays: %w is optional; explicit arrays are clearer in seeds/config
+Style/WordArray:
+  Enabled: false
 
 # Metrics tuning (relaxed for current codebase; tighten later)
 Metrics/MethodLength:
@@ -92,12 +106,18 @@ Metrics/MethodLength:
     - "test/**/*"
 
 Metrics/BlockLength:
+  Max: 50
   Exclude:
     - "config/routes.rb"
+    - "config/environments/**/*"
+    - "config/initializers/**/*"
     - "db/migrate/**/*"
     - "lib/tasks/**/*"
     - "db/seeds/**/*"
     - "test/**/*"
+
+Metrics/ParameterLists:
+  Max: 8
 
 Metrics/AbcSize:
   Max: 35
