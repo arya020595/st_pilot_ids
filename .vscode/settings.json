@@ -1,0 +1,8 @@
+{
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true
+  },
+  "rubocop.mode": "enabledWithFormattingOnly",
+  "rubocop.useBundler": true
+}
