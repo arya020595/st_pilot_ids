@@ -15,11 +15,15 @@ module UserManagement
 
     def show
       authorize @user, policy_class: UserManagement::UserPolicy
+
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def new
       @user = User.new
       authorize @user, policy_class: UserManagement::UserPolicy
+
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def create
@@ -38,6 +42,8 @@ module UserManagement
 
     def edit
       authorize @user, policy_class: UserManagement::UserPolicy
+
+      redirect_to user_management_users_path unless turbo_frame_request?
     end
 
     def update

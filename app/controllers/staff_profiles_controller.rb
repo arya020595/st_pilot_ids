@@ -17,6 +17,8 @@ class StaffProfilesController < ApplicationController
 
   def show
     authorize @staff_profile, policy_class: StaffProfilePolicy
+
+    redirect_to staff_profiles_path unless turbo_frame_request?
   end
 
   private

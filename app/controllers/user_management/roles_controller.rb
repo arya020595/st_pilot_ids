@@ -15,11 +15,15 @@ module UserManagement
 
     def show
       authorize @role, policy_class: UserManagement::RolePolicy
+
+      redirect_to user_management_roles_path unless turbo_frame_request?
     end
 
     def new
       @role = Role.new
       authorize @role, policy_class: UserManagement::RolePolicy
+
+      redirect_to user_management_roles_path unless turbo_frame_request?
     end
 
     def create
@@ -43,6 +47,8 @@ module UserManagement
 
     def edit
       authorize @role, policy_class: UserManagement::RolePolicy
+
+      redirect_to user_management_roles_path unless turbo_frame_request?
     end
 
     def update
