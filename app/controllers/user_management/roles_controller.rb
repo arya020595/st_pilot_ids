@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 module UserManagement
+  # Manages CRUD operations for roles within the user management namespace.
   class RolesController < ApplicationController
+    include RansackMultiSort
+
     before_action :set_role, only: %i[show edit update destroy confirm_delete]
 
     def index
       authorize Role, policy_class: UserManagement::RolePolicy
 
-      @q = policy_scope(Role, policy_scope_class: UserManagement::RolePolicy::Scope)
-            .order(id: :desc)
-            .ransack(params[:q])
-      @pagy, @roles = pagy(@q.result)
+      apply_ransack_search(
+        policy_scope(Role, policy_scope_class: UserManagement::RolePolicy::Scope)
+          .order(id: :desc)
+      )
+      @pagy, @roles = paginate_results(@q.result)
     end
 
     def show

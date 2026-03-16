@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 module UserManagement
+  # Manages CRUD operations for users within the user management namespace.
   class UsersController < ApplicationController
+    include RansackMultiSort
+
     before_action :set_user, only: %i[show edit update destroy confirm_delete]
 
     def index
       authorize User, policy_class: UserManagement::UserPolicy
 
-      @q = policy_scope(User, policy_scope_class: UserManagement::UserPolicy::Scope)
-            .order(id: :desc)
-            .ransack(params[:q])
-      @pagy, @users = pagy(@q.result.includes(:role))
+      apply_ransack_search(
+        policy_scope(User, policy_scope_class: UserManagement::UserPolicy::Scope)
+          .order(id: :desc)
+      )
+      @pagy, @users = paginate_results(@q.result.includes(:role))
     end
 
     def show
