@@ -17,6 +17,12 @@ module UserManagement
       @pagy, @roles = paginate_results(@q.result)
     end
 
+    def show
+      authorize @role, policy_class: UserManagement::RolePolicy
+
+      redirect_to user_management_roles_path unless turbo_frame_request?
+    end
+
     def new
       @role = Role.new
       authorize @role, policy_class: UserManagement::RolePolicy
