@@ -56,8 +56,8 @@ staff_permission_codes = %w[
 ]
 
 staff_permission_codes.each do |code|
-  permission = Permission.find_by(code: code)
-  RolePermission.find_or_create_by!(role: staff_role, permission: permission) if permission
+  permission = Permission.find_by!(code: code)
+  RolePermission.find_or_create_by!(role: staff_role, permission: permission)
 end
 
 puts "  Created #{Role.count} roles"
