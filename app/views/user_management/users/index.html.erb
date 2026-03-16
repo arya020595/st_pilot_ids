@@ -12,7 +12,14 @@
         <% end %>
       </div>
       <div class="card-body">
-        <%= search_form_for @q, url: user_management_users_path, html: { id: 'user-search-form' } do |f| %>
+        <%= search_form_for @q, url: user_management_users_path,
+            html: {
+              id: 'user-search-form',
+              data: {
+                controller: 'search-form',
+                action: 'submit->search-form#resetPage'
+              }
+            } do |f| %>
           <div class="table-responsive">
             <table class="table table-hover table-sm mb-0">
               <thead class="header-row">
@@ -33,25 +40,30 @@
                     </div>
                   </th>
                   <th class="text-center">
-                    <%= f.number_field :id_eq, class: 'form-control form-control-sm', placeholder: 'ID', min: 1 %>
+                    <%= f.number_field :id_eq, class: 'form-control form-control-sm', placeholder: 'ID', min: 1,
+                        data: { action: 'input->search-form#autoSubmit' } %>
                   </th>
                   <th>
-                    <%= f.search_field :name_cont, class: 'form-control form-control-sm', placeholder: 'Search Name..' %>
+                    <%= f.search_field :name_cont, class: 'form-control form-control-sm', placeholder: 'Search Name..',
+                        data: { action: 'input->search-form#autoSubmit' } %>
                   </th>
                   <th>
-                    <%= f.search_field :email_cont, class: 'form-control form-control-sm', placeholder: 'Search Email..' %>
+                    <%= f.search_field :email_cont, class: 'form-control form-control-sm', placeholder: 'Search Email..',
+                        data: { action: 'input->search-form#autoSubmit' } %>
                   </th>
                   <th>
                     <%= f.select :role_id_eq,
                         options_from_collection_for_select(Role.all, :id, :name, f.object.role_id_eq),
                         { include_blank: 'Select Role..' },
-                        { class: 'form-select form-select-sm' } %>
+                        { class: 'form-select form-select-sm',
+                          data: { action: 'change->search-form#instantSubmit' } } %>
                   </th>
                   <th class="text-center">
                     <%= f.select :is_active_eq,
                         options_for_select([['Active', true], ['Inactive', false]], f.object.is_active_eq),
                         { include_blank: 'Select Status..' },
-                        { class: 'form-select form-select-sm' } %>
+                        { class: 'form-select form-select-sm',
+                          data: { action: 'change->search-form#instantSubmit' } } %>
                   </th>
                   <th></th>
                   <th></th>

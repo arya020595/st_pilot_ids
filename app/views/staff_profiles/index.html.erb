@@ -1,131 +1,126 @@
 <div id="staff_profiles" class="container-fluid px-4 py-4 staff-profiles-list">
   <div class="staff_profiles_page">
     <h1 class="mb-0">Staff Profile</h1>
-
-      <%= search_form_for @q, url: staff_profiles_path,
+    <%= search_form_for @q, url: staff_profiles_path,
           html: {
             id: 'staff-profile-search-form',
             data: {
-              controller: 'live-filter',
-              live_filter_delay_value: 400
+              controller: 'search-form',
+              action: 'submit->search-form#resetPage'
             }
           } do |f| %>
-        <%= hidden_field_tag :per_page, @per_page %>
-        <div class="table-responsive staff-profile-table-wrap">
-          <table class="table table-hover table-sm mb-0 staff-profile-table">
-            <colgroup>
-              <col class="staff-action-col" />
-              <col class="staff-id-col" />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-              <col />
-            </colgroup>
-            <thead class="header-row">
-              <tr class="header-row">
-                <th></th>
-                <th><%= sort_link(@q, :staff_profile_id, 'Staff ID') %></th>
-                <th><%= sort_link(@q, :email, 'Email') %></th>
-                <th><%= sort_link(@q, :fullname, 'Full Name') %></th>
-                <th><%= sort_link(@q, :grade, 'Grade') %></th>
-                <th><%= sort_link(@q, :position, 'Position / Role') %></th>
-                <th><%= sort_link(@q, :division, 'Division / Dept') %></th>
-                <th><%= sort_link(@q, :supervisor_name, 'Supervisor Name') %></th>
-                <th><%= sort_link(@q, :no_of_subordinate, 'No. of Subordinate') %></th>
-                <th><%= sort_link(@q, :employment_level, 'Employment Level') %></th>
-              </tr>
-              <tr class="staff-filter-row">
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>
-                  <%= f.search_field :grade_cont,
+      <%= hidden_field_tag :per_page, @per_page %>
+      <div class="table-responsive staff-profile-table-wrap">
+        <table class="table table-hover table-sm mb-0 staff-profile-table">
+          <colgroup>
+            <col class="staff-action-col" />
+            <col class="staff-id-col" />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+          </colgroup>
+          <thead class="header-row">
+            <tr class="header-row">
+              <th></th>
+              <th><%= sort_link(@q, :staff_profile_id, 'Staff ID') %></th>
+              <th><%= sort_link(@q, :email, 'Email') %></th>
+              <th><%= sort_link(@q, :fullname, 'Full Name') %></th>
+              <th><%= sort_link(@q, :grade, 'Grade') %></th>
+              <th><%= sort_link(@q, :position, 'Position / Role') %></th>
+              <th><%= sort_link(@q, :division, 'Division / Dept') %></th>
+              <th><%= sort_link(@q, :supervisor_name, 'Supervisor Name') %></th>
+              <th><%= sort_link(@q, :no_of_subordinate, 'No. of Subordinate') %></th>
+              <th><%= sort_link(@q, :employment_level, 'Employment Level') %></th>
+            </tr>
+            <tr class="staff-filter-row">
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>
+                <%= f.search_field :grade_cont,
                       class: 'form-control form-control-sm',
                       placeholder: 'Type grade',
-                      data: { action: 'input->live-filter#queue change->live-filter#queue' } %>
-                </th>
-                <th>
-                  <%= f.search_field :position_cont,
+                      data: { action: 'input->search-form#autoSubmit' } %>
+              </th>
+              <th>
+                <%= f.search_field :position_cont,
                       class: 'form-control form-control-sm',
                       placeholder: 'Type position',
-                      data: { action: 'input->live-filter#queue change->live-filter#queue' } %>
-                </th>
-                <th>
-                  <%= f.search_field :division_cont,
+                      data: { action: 'input->search-form#autoSubmit' } %>
+              </th>
+              <th>
+                <%= f.search_field :division_cont,
                       class: 'form-control form-control-sm',
                       placeholder: 'Type division',
-                      data: { action: 'input->live-filter#queue change->live-filter#queue' } %>
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="staff-profiles-table-body">
-              <% if @staff_profiles.any? %>
-                <% @staff_profiles.each do |staff_profile| %>
-                  <tr>
-                    <td>
-                      <%= link_to staff_profile_path(staff_profile), class: "action-btn info", title: "View Details",
-                          **modal_link_data(size: 'modal-lg') do %>
-                        <i class="bi bi-info-circle-fill staff-info-icon"></i>
-                      <% end %>
-                    </td>
-                    <td class="staff-id-value"><%= format('STF_%03d', staff_profile.staff_profile_id) %></td>
-                    <td><%= staff_profile.email %></td>
-                    <td><%= staff_profile.fullname %></td>
-                    <td><%= staff_profile.grade %></td>
-                    <td><%= staff_profile.position %></td>
-                    <td><%= staff_profile.division %></td>
-                    <td><%= staff_profile.supervisor_name %></td>
-                    <td><%= staff_profile.no_of_subordinate %></td>
-                    <td><%= staff_profile.employment_level %></td>
-                  </tr>
-                <% end %>
-              <% else %>
+                      data: { action: 'input->search-form#autoSubmit' } %>
+              </th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="staff-profiles-table-body">
+            <% if @staff_profiles.any? %>
+              <% @staff_profiles.each do |staff_profile| %>
                 <tr>
-                  <td colspan="10" class="text-center text-muted py-4">
-                    No staff profiles found.
+                  <td>
+                    <%= link_to staff_profile_path(staff_profile), class: "action-btn info", title: "View Details",
+                          **modal_link_data(size: 'modal-lg') do %>
+                      <i class="bi bi-info-circle-fill staff-info-icon"></i>
+                    <% end %>
                   </td>
+                  <td class="staff-id-value"><%= format('STF_%03d', staff_profile.staff_profile_id) %></td>
+                  <td><%= staff_profile.email %></td>
+                  <td><%= staff_profile.fullname %></td>
+                  <td><%= staff_profile.grade %></td>
+                  <td><%= staff_profile.position %></td>
+                  <td><%= staff_profile.division %></td>
+                  <td><%= staff_profile.supervisor_name %></td>
+                  <td><%= staff_profile.no_of_subordinate %></td>
+                  <td><%= staff_profile.employment_level %></td>
                 </tr>
               <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
-
-      <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-        <div class="d-flex align-items-center gap-2 flex-wrap">
-          <%= form_with url: staff_profiles_path, method: :get, local: true, class: 'd-flex align-items-center gap-2' do %>
-            <% if params[:q].present? %>
-              <% params[:q].each do |key, value| %>
-                <% next if value.blank? %>
-                <%= hidden_field_tag "q[#{key}]", value %>
-              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="10" class="text-center text-muted py-4">
+                  No staff profiles found.
+                </td>
+              </tr>
             <% end %>
-            <label for="per_page" class="small text-muted">Show</label>
-            <%= select_tag :per_page,
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <%= form_with url: staff_profiles_path, method: :get, local: true, class: 'd-flex align-items-center gap-2' do %>
+          <% if params[:q].present? %>
+            <% params[:q].each do |key, value| %>
+              <% next if value.blank? %>
+              <%= hidden_field_tag "q[#{key}]", value %>
+            <% end %>
+          <% end %>
+          <label for="per_page" class="small text-muted">Show</label>
+          <%= select_tag :per_page,
                 options_for_select([6, 10, 25, 50, 100], @per_page),
                 class: 'form-select form-select-sm per-page-control',
                 onchange: 'this.form.submit();' %>
-            <span class="small text-muted">entries</span>
-          <% end %>
-
-          <span class="text-muted small">
-            <%== @pagy.info_tag(item_name: 'staff profiles') %>
-          </span>
-        </div>
-
-        <div>
-          <%== @pagy.series_nav(:bootstrap) if @pagy.pages > 1 %>
-        </div>
+          <span class="small text-muted">entries</span>
+        <% end %>
+        <span class="text-muted small">
+          <%== @pagy.info_tag(item_name: 'staff profiles') %>
+        </span>
       </div>
+      <div>
+        <%== @pagy.series_nav(:bootstrap) if @pagy.pages > 1 %>
+      </div>
+    </div>
   </div>
-
   <%= render 'modal' %>
 </div>
