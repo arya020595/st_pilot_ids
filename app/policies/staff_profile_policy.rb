@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-# Authorization policy for staff profile access.
+# Authorization policy for Staff Profile access.
 class StaffProfilePolicy < ApplicationPolicy
+  # Permission codes:
+  # - staff_profiles.index
+  # - staff_profiles.show
+
   def show?
     index?
   end
@@ -12,7 +16,7 @@ class StaffProfilePolicy < ApplicationPolicy
     'staff_profiles'
   end
 
-  # Policy scope for staff profile queries.
+  # Scope for Staff Profile queries.
   class Scope < ApplicationPolicy::Scope
     private
 

@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    // Ruby language server — autocompletion, go-to-definition, hover docs
+    "Shopify.ruby-lsp",
+    // RuboCop linter & formatter
+    "rubocop.vscode-rubocop",
+    // ERB / HTML template support
+    "aliariff.vscode-erb-beautify",
+    // Prettier for non-Ruby files (JS, CSS, JSON, YAML, Markdown)
+    "esbenp.prettier-vscode",
+    // GitLens — enhanced Git blame, history, diff
+    "eamodio.gitlens",
+    // DotENV syntax highlighting
+    "mikestead.dotenv",
+    // YAML validation and schema support
+    "redhat.vscode-yaml",
+    // EditorConfig support
+    "editorconfig.editorconfig"
+  ]
+}

@@ -6,12 +6,19 @@
     <!-- Dashboard -->
     <% if can_view_menu?('dashboard.index') %>
       <li class="nav-item">
-        <%= link_to dashboard_path, class: "nav-link #{active_nav_item?(dashboard_path) ? 'active' : 'link-dark'}" do %>
+        <%= link_to root_path, class: "nav-link #{active_nav_item?(root_path) ? 'active' : 'link-dark'}" do %>
           <i class="bi bi-speedometer2 me-2"></i> Dashboard
         <% end %>
       </li>
     <% end %>
-
+    <!-- BI Dashboard -->
+    <% if can_view_menu?('bi_dashboards.index') %>
+      <li class="nav-item">
+        <%= link_to bi_dashboards_path, class: "nav-link #{active_controller?('bi_dashboards') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-bar-chart-line me-2"></i> BI Dashboard
+        <% end %>
+      </li>
+    <% end %>
     <!-- Staff Profile -->
     <% if can_view_menu?('staff_profiles.index') %>
       <li class="nav-item">
@@ -20,7 +27,45 @@
         <% end %>
       </li>
     <% end %>
-
+    <!-- Psychometric Assessment -->
+    <% if can_view_menu?('psychometric_assessments.index') %>
+      <li class="nav-item">
+        <%= link_to psychometric_assessments_path, class: "nav-link #{active_controller?('psychometric_assessments') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-clipboard-data me-2"></i> Psychometric Assessment
+        <% end %>
+      </li>
+    <% end %>
+    <!-- KPI Assessment -->
+    <% if can_view_menu?('kpi_assessments.index') %>
+      <li class="nav-item">
+        <%= link_to kpi_assessments_path, class: "nav-link #{active_controller?('kpi_assessments') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-bullseye me-2"></i> KPI Assessment
+        <% end %>
+      </li>
+    <% end %>
+    <!-- Master Data -->
+    <% has_master_data_access = can_view_menu?('master_data.ids_staffs.index') %>
+    <% if has_master_data_access %>
+      <% master_data_active = active_controller?('master_data') %>
+      <li>
+        <a class="nav-link <%= master_data_active ? 'active' : 'link-dark' %>"
+           data-bs-toggle="collapse"
+           data-bs-target="#masterDataCollapse"
+           href="#" role="button"
+           aria-expanded="<%= master_data_active %>"
+           aria-controls="masterDataCollapse">
+          <i class="bi bi-database me-2"></i> Master Data
+          <i class="bi bi-chevron-right float-end collapse-chevron"></i>
+        </a>
+        <div class="collapse <%= 'show' if master_data_active %>" id="masterDataCollapse" data-bs-parent="#sidebarAccordion">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small ps-4">
+            <% if can_view_menu?('master_data.ids_staffs.index') %>
+              <li><%= link_to "IDS Staff", master_data_ids_staffs_path, class: "nav-link #{active_controller?('master_data/ids_staffs') ? 'active' : 'link-dark'}" %></li>
+            <% end %>
+          </ul>
+        </div>
+      </li>
+    <% end %>
     <!-- User Management -->
     <% has_user_mgmt_access = can_view_menu?('user_management.roles.index') || can_view_menu?('user_management.users.index') %>
     <% if has_user_mgmt_access %>

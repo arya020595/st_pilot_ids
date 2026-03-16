@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-# Authorization policy for Dashboard access.
-class DashboardPolicy < ApplicationPolicy
+# Authorization policy for BI Dashboard access.
+class BiDashboardPolicy < ApplicationPolicy
   # Permission codes:
-  # - dashboard.index
+  # - bi_dashboards.index
 
   private
 
   def permission_resource
-    'dashboard'
+    'bi_dashboards'
   end
 
-  # Scope for Dashboard queries.
+  # Scope for BI Dashboard queries.
   class Scope < ApplicationPolicy::Scope
     private
 
     def permission_resource
-      'dashboard'
+      'bi_dashboards'
     end
   end
 end
