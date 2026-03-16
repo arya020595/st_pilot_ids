@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Authorization policy for Dashboard access.
 class DashboardPolicy < ApplicationPolicy
   # Permission codes:
   # - dashboard.index
@@ -10,6 +11,7 @@ class DashboardPolicy < ApplicationPolicy
     'dashboard'
   end
 
+  # Scope for Dashboard queries.
   class Scope < ApplicationPolicy::Scope
     private
 

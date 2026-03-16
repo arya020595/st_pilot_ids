@@ -93,6 +93,7 @@ Metrics/MethodLength:
 
 Metrics/BlockLength:
   Exclude:
+    - "config/routes.rb"
     - "db/migrate/**/*"
     - "lib/tasks/**/*"
     - "db/seeds/**/*"

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Authorization policy for KPI Assessment access.
 class KpiAssessmentPolicy < ApplicationPolicy
   # Permission codes:
   # - kpi_assessments.index
@@ -10,6 +11,7 @@ class KpiAssessmentPolicy < ApplicationPolicy
     'kpi_assessments'
   end
 
+  # Scope for KPI Assessment queries.
   class Scope < ApplicationPolicy::Scope
     private
 

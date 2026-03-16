@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Authorization policy for Psychometric Assessment access.
 class PsychometricAssessmentPolicy < ApplicationPolicy
   # Permission codes:
   # - psychometric_assessments.index
@@ -10,6 +11,7 @@ class PsychometricAssessmentPolicy < ApplicationPolicy
     'psychometric_assessments'
   end
 
+  # Scope for Psychometric Assessment queries.
   class Scope < ApplicationPolicy::Scope
     private
 
