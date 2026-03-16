@@ -11,6 +11,16 @@
         <% end %>
       </li>
     <% end %>
+
+    <!-- Staff Profile -->
+    <% if can_view_menu?('staff_profiles.index') %>
+      <li class="nav-item">
+        <%= link_to staff_profiles_path, class: "nav-link #{active_controller?('staff_profiles') ? 'active' : 'link-dark'}" do %>
+          <i class="bi bi-person-badge me-2"></i> Staff Profile
+        <% end %>
+      </li>
+    <% end %>
+
     <!-- User Management -->
     <% has_user_mgmt_access = can_view_menu?('user_management.roles.index') || can_view_menu?('user_management.users.index') %>
     <% if has_user_mgmt_access %>
