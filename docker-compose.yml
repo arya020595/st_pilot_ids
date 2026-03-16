@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:16.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: st_pilot_ids_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - st_pilot_ids_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: ["./bin/dev"]
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: ${DATABASE_HOST:-db}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-root}
+      DATABASE_NAME: ${DATABASE_NAME:-st_pilot_ids_development}
+      RAILS_ENV: ${RAILS_ENV:-development}
+      RAILS_MAX_THREADS: ${RAILS_MAX_THREADS:-5}
+      # Disable Spring in Docker for better compatibility
+      DISABLE_SPRING: 1
+      # Ensure Puppeteer/Grover uses system Chromium executable
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source code for live reloading
+      - .:/rails
+      # Prevent node_modules conflicts if using Node
+      - /rails/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+    networks:
+      - st_pilot_ids_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  st_pilot_ids_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

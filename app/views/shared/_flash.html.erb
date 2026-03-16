@@ -1,0 +1,29 @@
+<% if flash.any? %>
+  <% flash.each do |type, message| %>
+    <% alert_type = case type.to_sym
+                    when :notice then 'success'
+                    when :alert then 'danger'
+                    when :error then 'danger'
+                    when :warning then 'warning'
+                    else 'info'
+                    end %>
+    <% icon = case alert_type
+              when 'success' then 'check-circle-fill'
+              when 'danger' then 'exclamation-triangle-fill'
+              when 'warning' then 'exclamation-triangle-fill'
+              else 'info-circle-fill'
+              end %>
+    <% color_class = "text-#{alert_type}" %>
+    <div
+      class="alert alert-<%= alert_type %> alert-dismissible fade show d-flex align-items-center gap-2 py-2 px-3 mb-2 shadow-sm rounded-3"
+      role="alert"
+      data-controller="flash"
+      data-flash-delay-value="5000">
+      <i class="bi bi-<%= icon %> <%= color_class %> fs-5 flex-shrink-0"></i>
+      <div class="flex-grow-1">
+        <span class="fw-medium"><%= message %></span>
+      </div>
+      <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+<% end %>

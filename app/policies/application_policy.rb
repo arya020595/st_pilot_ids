@@ -1,0 +1,84 @@
+# frozen_string_literal: true
+
+class ApplicationPolicy
+  attr_reader :user, :record
+
+  def initialize(user, record)
+    @user = user
+    @record = record
+  end
+
+  def index?
+    user.has_permission?(build_permission_code('index'))
+  end
+
+  def show?
+    user.has_permission?(build_permission_code('show'))
+  end
+
+  def create?
+    user.has_permission?(build_permission_code('create'))
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    user.has_permission?(build_permission_code('update'))
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    user.has_permission?(build_permission_code('destroy'))
+  end
+
+  def restore?
+    destroy?
+  end
+
+  private
+
+  # Build full permission code from action
+  def build_permission_code(action)
+    "#{permission_resource}.#{action}"
+  end
+
+  # Override this method in subclasses to map to correct permission resource
+  def permission_resource
+    raise NotImplementedError, "#{self.class.name} must implement #permission_resource"
+  end
+
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      return scope.all if user.superadmin?
+      return scope.none unless user.has_permission?(build_permission_code('index'))
+
+      apply_role_based_scope
+    end
+
+    private
+
+    def apply_role_based_scope
+      scope.all
+    end
+
+    def build_permission_code(action)
+      "#{permission_resource}.#{action}"
+    end
+
+    def permission_resource
+      raise NotImplementedError, "#{self.class.name} must implement #permission_resource"
+    end
+  end
+end

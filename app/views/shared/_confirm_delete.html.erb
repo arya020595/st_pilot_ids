@@ -1,0 +1,25 @@
+<%# Shared Confirm Delete Component %>
+<%# Usage: render "shared/confirm_delete", item_name: "Name", item_type: "User", delete_path: path, form_id: "deleteForm" %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <strong>Confirm Delete</strong>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="text-center">
+      <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+      <h5 class="mt-3">Are you sure you want to delete this <%= item_type.downcase %>?</h5>
+      <p class="text-muted">
+        <strong><%= item_name %></strong> will be permanently removed.
+        This action cannot be undone.
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <%= button_to "Delete", delete_path, method: :delete, class: "btn btn-danger", id: form_id,
+        form: { data: { turbo_frame: "_top" } } %>
+  </div>
+<% end %>
