@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module UserManagement
+  # Manages CRUD operations for users within the user management namespace.
   class UsersController < ApplicationController
     include RansackMultiSort
 
