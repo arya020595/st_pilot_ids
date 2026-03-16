@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-class DashboardPolicy < ApplicationPolicy
+class BiDashboardPolicy < ApplicationPolicy
   # Permission codes:
-  # - dashboard.index
+  # - bi_dashboards.index
 
   private
 
   def permission_resource
-    'dashboard'
+    'bi_dashboards'
   end
 
   class Scope < ApplicationPolicy::Scope
     private
 
     def permission_resource
-      'dashboard'
+      'bi_dashboards'
     end
   end
 end

@@ -10,7 +10,11 @@ puts 'Seeding database...'
 puts 'Creating permissions...'
 permissions_data = [
   { code: 'dashboard.index', name: 'View Dashboard' },
+  { code: 'bi_dashboards.index', name: 'View BI Dashboard' },
   { code: 'staff_profiles.index', name: 'View Staff Profile' },
+  { code: 'psychometric_assessments.index', name: 'View Psychometric Assessment' },
+  { code: 'kpi_assessments.index', name: 'View KPI Assessment' },
+  { code: 'master_data.ids_staffs.index', name: 'View IDS Staff' },
   { code: 'user_management.users.index', name: 'View Users' },
   { code: 'user_management.users.show', name: 'Show User' },
   { code: 'user_management.users.create', name: 'Create User' },
@@ -38,6 +42,24 @@ superadmin_role = Role.find_or_create_by!(name: 'superadmin')
 Permission.find_each do |permission|
   RolePermission.find_or_create_by!(role: superadmin_role, permission: permission)
 end
+
+# Create staff role with limited permissions
+staff_role = Role.find_or_create_by!(name: 'staff')
+
+staff_permission_codes = %w[
+  dashboard.index
+  bi_dashboards.index
+  staff_profiles.index
+  psychometric_assessments.index
+  kpi_assessments.index
+  master_data.ids_staffs.index
+]
+
+staff_permission_codes.each do |code|
+  permission = Permission.find_by(code: code)
+  RolePermission.find_or_create_by!(role: staff_role, permission: permission) if permission
+end
+
 puts "  Created #{Role.count} roles"
 
 # Create default superadmin user

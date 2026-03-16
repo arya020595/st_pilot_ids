@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-class DashboardPolicy < ApplicationPolicy
+class PsychometricAssessmentPolicy < ApplicationPolicy
   # Permission codes:
-  # - dashboard.index
+  # - psychometric_assessments.index
 
   private
 
   def permission_resource
-    'dashboard'
+    'psychometric_assessments'
   end
 
   class Scope < ApplicationPolicy::Scope
     private
 
     def permission_resource
-      'dashboard'
+      'psychometric_assessments'
     end
   end
 end

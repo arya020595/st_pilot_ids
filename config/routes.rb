@@ -21,8 +21,22 @@ Rails.application.routes.draw do
   # Dashboard
   get 'dashboard', to: 'dashboard#index'
 
+  # BI Dashboard
+  resources :bi_dashboards, only: %i[index]
+
   # Staff Profile
   resources :staff_profiles, only: %i[index show]
+
+  # Psychometric Assessment
+  resources :psychometric_assessments, only: %i[index]
+
+  # KPI Assessment
+  resources :kpi_assessments, only: %i[index]
+
+  # Master Data Namespace
+  namespace :master_data do
+    resources :ids_staffs, only: %i[index]
+  end
 
   # User Management Namespace
   namespace :user_management do

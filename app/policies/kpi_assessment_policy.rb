@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-class DashboardPolicy < ApplicationPolicy
+class KpiAssessmentPolicy < ApplicationPolicy
   # Permission codes:
-  # - dashboard.index
+  # - kpi_assessments.index
 
   private
 
   def permission_resource
-    'dashboard'
+    'kpi_assessments'
   end
 
   class Scope < ApplicationPolicy::Scope
     private
 
     def permission_resource
-      'dashboard'
+      'kpi_assessments'
     end
   end
 end
