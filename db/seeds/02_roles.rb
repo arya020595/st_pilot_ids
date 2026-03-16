@@ -26,4 +26,17 @@ staff_permission_codes.each do |code|
   RolePermission.find_or_create_by!(role: staff_role, permission: permission)
 end
 
+# Create ids_staff role with assessment-only permissions
+ids_staff_role = Role.find_or_create_by!(name: 'ids_staff')
+
+ids_staff_permission_codes = %w[
+  psychometric_assessments.index
+  kpi_assessments.index
+]
+
+ids_staff_permission_codes.each do |code|
+  permission = Permission.find_by!(code: code)
+  RolePermission.find_or_create_by!(role: ids_staff_role, permission: permission)
+end
+
 puts "  Created #{Role.count} roles"
