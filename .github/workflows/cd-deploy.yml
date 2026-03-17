@@ -100,9 +100,6 @@ jobs:
             CURRENT_IMAGE=$(docker compose images web --format "{{.Tag}}" 2>/dev/null | head -1 || echo "none")
             echo "  Current image tag: ${CURRENT_IMAGE}"
 
-            # Set SENTRY_RELEASE in .env so Rails container picks it up
-            grep -q "^SENTRY_RELEASE=" .env && sed -i "s|^SENTRY_RELEASE=.*|SENTRY_RELEASE=${DEPLOY_SHA}|" .env || echo "SENTRY_RELEASE=${DEPLOY_SHA}" >> .env
-
             echo "→ Updating docker-compose to use specific image tag..."
             # Update DOCKER_IMAGE in .env file to use specific SHA tag
             if [ ! -f .env ]; then
@@ -156,31 +153,6 @@ jobs:
             echo "   Deployed version: main-${SHORT_SHA}"
             echo "=========================================="
             docker compose ps
-
-      - name: Checkout code (for Sentry commit tracking)
-        if: success()
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Create Sentry Release
-        if: success()
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        run: |
-          # Install Sentry CLI
-          curl -sL https://sentry.io/get-cli/ | bash
-
-          VERSION="${{ github.event.workflow_run.head_sha || github.sha }}"
-
-          echo "→ Creating Sentry release: ${VERSION}"
-          sentry-cli releases new "$VERSION"
-          sentry-cli releases set-commits "$VERSION" --auto
-          sentry-cli releases deploys "$VERSION" new -e production
-          sentry-cli releases finalize "$VERSION"
-          echo "✅ Sentry release created and finalized"
 
       - name: Notify Slack - Deployment Result
         if: always()
