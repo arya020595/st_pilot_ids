@@ -69,7 +69,10 @@ jobs:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          port: ${{ secrets.PRODUCTION_SSH_PORT || 22 }}
           envs: DEPLOY_SHA
+          timeout: 60s
+          command_timeout: 10m
           script: |
             set -e
 
