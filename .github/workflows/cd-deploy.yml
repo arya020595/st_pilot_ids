@@ -1,0 +1,243 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Build & Push Docker Image"]
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    steps:
+      - name: Set deployment start time
+        run: |
+          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Notify Slack - Deployment Starting
+        run: |
+          set -e
+
+          REPO="${{ github.repository }}"
+          BRANCH="${{ github.event.workflow_run.head_branch || github.ref_name }}"
+          FULL_SHA="${{ github.event.workflow_run.head_sha || github.sha }}"
+          SHORT_SHA=$(echo "$FULL_SHA" | cut -c1-7)
+          ACTOR='${{ github.actor }}'
+          RUN_URL='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          COMMIT_MSG=$(echo ${{ toJson(github.event.workflow_run.head_commit.message || 'Manual dispatch') }} | sed 's/\\n/\n/g')
+
+          payload=$(jq -n \
+            --arg repo "$REPO" \
+            --arg branch "$BRANCH" \
+            --arg sha "$SHORT_SHA" \
+            --arg actor "$ACTOR" \
+            --arg msg "$COMMIT_MSG" \
+            --arg runurl "$RUN_URL" \
+            '{
+              text: ":rocket: Production deployment started",
+              blocks: [
+                { type: "header", text: { type: "plain_text", text: "🚀 Production Deployment Started" } },
+                { type: "section", fields: [
+                    { type: "mrkdwn", text: ("*Repository:*\n" + $repo) },
+                    { type: "mrkdwn", text: ("*Branch:*\n" + $branch) },
+                    { type: "mrkdwn", text: ("*Commit:*\n" + $sha) },
+                    { type: "mrkdwn", text: ("*Actor:*\n" + $actor) }
+                  ]
+                },
+                { type: "section", text: { type: "mrkdwn", text: ("*Message:*\n" + $msg) } },
+                { type: "context", elements: [
+                    { type: "mrkdwn", text: ("<" + $runurl + "|View workflow run>") }
+                  ]
+                }
+              ]
+            }')
+          echo "$payload" | curl -s -X POST -H 'Content-type: application/json' -d @- "$SLACK_WEBHOOK_URL" || echo "Warning: Failed to send Slack notification"
+          echo "Sent Slack start notification"
+
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DEPLOY_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          envs: DEPLOY_SHA
+          script: |
+            set -e
+
+            # Configuration
+            MAX_RETRIES=30
+            RETRY_INTERVAL=5
+            APP_NAME="st_pilot_ids"
+            APP_PATH="/home/stadmin/${APP_NAME}"
+            DEPLOY_HISTORY_FILE=".deploy_history"
+            MAX_HISTORY=10
+            IMAGE="ghcr.io/${{ github.repository }}"
+
+            # Get short SHA for tagging
+            SHORT_SHA=$(echo "$DEPLOY_SHA" | cut -c1-7)
+
+            echo "→ Pulling Docker image: ${IMAGE}:main-${SHORT_SHA}..."
+            docker pull ${IMAGE}:main-${SHORT_SHA}
+
+            echo ""
+            echo "=========================================="
+            echo "📦 Deploying ${APP_NAME}..."
+            echo "=========================================="
+
+            cd "$APP_PATH"
+
+            # Save current image version before deploying (for rollback)
+            echo "→ Saving current deployment state..."
+            CURRENT_IMAGE=$(docker compose images web --format "{{.Tag}}" 2>/dev/null | head -1 || echo "none")
+            echo "  Current image tag: ${CURRENT_IMAGE}"
+
+            # Set SENTRY_RELEASE in .env so Rails container picks it up
+            grep -q "^SENTRY_RELEASE=" .env && sed -i "s|^SENTRY_RELEASE=.*|SENTRY_RELEASE=${DEPLOY_SHA}|" .env || echo "SENTRY_RELEASE=${DEPLOY_SHA}" >> .env
+
+            echo "→ Updating docker-compose to use specific image tag..."
+            # Update DOCKER_IMAGE in .env file to use specific SHA tag
+            if [ ! -f .env ]; then
+              echo "❌ .env file not found in ${APP_PATH}; cannot safely update DOCKER_IMAGE."
+              echo "   Aborting deployment to avoid running an outdated image."
+              exit 1
+            fi
+            sed -i "s|^DOCKER_IMAGE=.*|DOCKER_IMAGE=${IMAGE}:main-${SHORT_SHA}|" .env || true
+            # If DOCKER_IMAGE doesn't exist, add it
+            grep -q "^DOCKER_IMAGE=" .env || echo "DOCKER_IMAGE=${IMAGE}:main-${SHORT_SHA}" >> .env
+
+            echo "→ Restarting services..."
+            docker compose up -d
+
+            echo "→ Waiting for health check..."
+            retry_count=0
+            while [ $retry_count -lt $MAX_RETRIES ]; do
+              container_id=$(docker compose ps -q web || true)
+              if [ -n "$container_id" ]; then
+                health_status=$(docker inspect --format '{{.State.Health.Status}}' "$container_id" 2>/dev/null || echo "unknown")
+                if [ "$health_status" = "healthy" ]; then
+                  echo "✓ Service is healthy!"
+                  break
+                fi
+              fi
+
+              retry_count=$((retry_count + 1))
+              if [ $retry_count -eq $MAX_RETRIES ]; then
+                echo "❌ Health check failed after $((MAX_RETRIES * RETRY_INTERVAL))s"
+                docker compose ps
+                docker compose logs --tail=50 web
+                exit 1
+              fi
+
+              echo "  Attempt ${retry_count}/${MAX_RETRIES}..."
+              sleep $RETRY_INTERVAL
+            done
+
+            echo "→ Running database migrations..."
+            docker compose exec -T web rails db:migrate
+
+            # Record deployment history AFTER successful deployment
+            echo "→ Recording deployment history..."
+            echo "$(date -Iseconds)|main-${SHORT_SHA}|${CURRENT_IMAGE}" >> "$DEPLOY_HISTORY_FILE"
+            # Keep only last N deployments
+            tail -n $MAX_HISTORY "$DEPLOY_HISTORY_FILE" > "${DEPLOY_HISTORY_FILE}.tmp" && mv "${DEPLOY_HISTORY_FILE}.tmp" "$DEPLOY_HISTORY_FILE"
+
+            echo ""
+            echo "=========================================="
+            echo "✅ ${APP_NAME} deployed successfully!"
+            echo "   Deployed version: main-${SHORT_SHA}"
+            echo "=========================================="
+            docker compose ps
+
+      - name: Checkout code (for Sentry commit tracking)
+        if: success()
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Sentry Release
+        if: success()
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          # Install Sentry CLI
+          curl -sL https://sentry.io/get-cli/ | bash
+
+          VERSION="${{ github.event.workflow_run.head_sha || github.sha }}"
+
+          echo "→ Creating Sentry release: ${VERSION}"
+          sentry-cli releases new "$VERSION"
+          sentry-cli releases set-commits "$VERSION" --auto
+          sentry-cli releases deploys "$VERSION" new -e production
+          sentry-cli releases finalize "$VERSION"
+          echo "✅ Sentry release created and finalized"
+
+      - name: Notify Slack - Deployment Result
+        if: always()
+        run: |
+          set -e
+          REPO="${{ github.repository }}"
+          BRANCH="${{ github.event.workflow_run.head_branch || github.ref_name }}"
+          FULL_SHA="${{ github.event.workflow_run.head_sha || github.sha }}"
+          SHORT_SHA=$(echo "$FULL_SHA" | cut -c1-7)
+          ACTOR='${{ github.actor }}'
+          RUN_URL='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          STATUS='${{ job.status }}'
+          END_TIME=$(date +%s)
+          DURATION=$(( END_TIME - START_TIME ))
+          HUMAN_DURATION=$(printf '%02dm:%02ds' $((DURATION/60)) $((DURATION%60)))
+          COMMIT_MSG=$(echo ${{ toJson(github.event.workflow_run.head_commit.message || 'Manual dispatch') }} | sed 's/\\n/\n/g')
+
+          if [ "$STATUS" = "success" ]; then
+            TITLE="✅ Production Deployment Succeeded"
+            RESULT_LINE="*Result:* Success"
+            COLOR="#2eb886"
+          else
+            TITLE="❌ Production Deployment Failed"
+            RESULT_LINE="*Result:* Failure"
+            COLOR="#e01e5a"
+          fi
+
+          payload=$(jq -n \
+            --arg color "$COLOR" \
+            --arg title "$TITLE" \
+            --arg repo "$REPO" \
+            --arg branch "$BRANCH" \
+            --arg sha "$SHORT_SHA" \
+            --arg actor "$ACTOR" \
+            --arg msg "$COMMIT_MSG" \
+            --arg runurl "$RUN_URL" \
+            --arg result "$RESULT_LINE" \
+            --arg dur "$HUMAN_DURATION" \
+            '{
+              text: $title,
+              blocks: [
+                { type: "header", text: { type: "plain_text", text: $title } },
+                { type: "section", fields: [
+                    { type: "mrkdwn", text: ("*Repository:*\n" + $repo) },
+                    { type: "mrkdwn", text: ("*Branch:*\n" + $branch) },
+                    { type: "mrkdwn", text: ("*Commit:*\n" + $sha) },
+                    { type: "mrkdwn", text: ("*Actor:*\n" + $actor) },
+                    { type: "mrkdwn", text: $result },
+                    { type: "mrkdwn", text: ("*Duration:*\n" + $dur) }
+                  ]
+                },
+                { type: "section", text: { type: "mrkdwn", text: ("*Message:*\n" + $msg) } },
+                { type: "context", elements: [
+                    { type: "mrkdwn", text: ("<" + $runurl + "|View workflow run>") }
+                  ]
+                }
+              ]
+            }')
+          echo "$payload" | curl -s -X POST -H 'Content-type: application/json' -d @- "$SLACK_WEBHOOK_URL" || echo "Warning: Failed to send Slack notification"
+          echo "Sent Slack result notification ($STATUS)"
