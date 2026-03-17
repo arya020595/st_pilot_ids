@@ -163,7 +163,7 @@ jobs:
         run: echo "No system tests found under test/system. Skipping system test run."
 
       - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: screenshots
