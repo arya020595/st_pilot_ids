@@ -2,7 +2,7 @@
 
 puts 'Creating users for IDS staff...'
 
-ids_staff_role = Role.find_by(name: 'ids_staff') || Role.find_by(name: 'staff')
+ids_staff_role = Role.find_by(name: 'staff')
 created_or_updated = 0
 
 IdsStaff.order(:id).find_each do |ids_staff|
