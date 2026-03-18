@@ -8,7 +8,12 @@ class User < ApplicationRecord
 
   belongs_to :role, optional: true
 
+  # belongs to nullable staff id
+  belongs_to :ids_staff, foreign_key: :ids_staff_id, inverse_of: :user, optional: true
+
   validates :name, presence: true
+
+  validates :ids_staff_id, uniqueness: true, allow_nil: true
 
   # Check if user has a specific permission code
   # Superadmin role bypasses all permission checks
