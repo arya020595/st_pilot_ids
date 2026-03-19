@@ -66,7 +66,7 @@ jobs:
           echo "Sent Slack rollback start notification"
 
       - name: Rollback production server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         env:
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           MIGRATION_STEPS: ${{ github.event.inputs.rollback_migrations }}
