@@ -1,0 +1,122 @@
+#ids_staffs {
+  max-width: 100%;
+  overflow-x: hidden;
+
+  .ids_staffs_page {
+    padding: 0;
+  }
+
+  .ids_staffs_page h1 {
+    background-color: #1f5385;
+    color: #ffffff;
+    padding: 14px 20px;
+    font-size: 34px;
+    border-radius: 8px;
+    font-weight: 900;
+    margin-bottom: 18px;
+    line-height: 1.1;
+  }
+
+  .table-responsive.ids-staff-table-wrap {
+    margin-top: 14px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+
+  .ids-staff-table {
+    min-width: 760px;
+    margin-bottom: 0;
+  }
+
+  .ids-staff-id-col {
+    width: 180px;
+    min-width: 180px;
+  }
+
+  .table thead tr.header-row th {
+    background-color: #1f5385;
+    color: #ffffff;
+    text-align: center;
+    padding: 11px 10px;
+    vertical-align: middle;
+    font-weight: 700;
+    border-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .table thead tr.header-row th a {
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 700;
+  }
+
+  .ids-staff-filter-row th {
+    background-color: #1f5385;
+    padding: 8px 8px;
+    vertical-align: middle;
+    border-bottom: 0;
+  }
+
+  .ids-staff-filter-row .form-control {
+    min-width: 110px;
+    font-size: 14px;
+    border-color: #d7e2ef;
+  }
+
+  #ids-staffs-table-body tr td,
+  #ids-staffs-table-body tr th {
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: top;
+    border-bottom: 1px solid #d8dee8;
+  }
+
+  #ids-staffs-table-body tr td:nth-child(2),
+  #ids-staffs-table-body tr td:nth-child(4) {
+    text-align: left;
+  }
+
+  .ids-staff-id-value {
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+    font-weight: 700;
+  }
+
+  .per-page-control {
+    min-width: 70px;
+  }
+
+  .pagination {
+    margin-bottom: 0;
+  }
+
+  .pagination .page-link {
+    color: #1f5385;
+    background-color: #ffffff;
+    border-color: #c7d0dd;
+  }
+
+  .pagination .page-link:hover {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.active .page-link {
+    color: #ffffff;
+    background-color: #1f5385;
+    border-color: #1f5385;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    color: #8a95a5;
+    background-color: #f8f9fa;
+    border-color: #d4dae3;
+  }
+}

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
@@ -48,7 +49,7 @@ gem 'thruster', require: false
 gem 'image_processing', '~> 1.2'
 
 # Authentication
-gem 'devise'
+gem 'devise', '>= 5.0.3'
 
 # Pagination
 gem 'pagy'
