@@ -81,7 +81,6 @@ All current codes:
   staff_profiles.show         ← note: show is a separate permission here
   psychometric_assessments.index
   kpi_assessments.index
-  master_data.ids_staffs.index
   user_management.users.index / .show / .create / .update / .destroy
   user_management.roles.index / .show / .create / .update / .destroy
 ```

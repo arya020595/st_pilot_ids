@@ -21,9 +21,13 @@ permissions_data = [
 ]
 
 permissions_data.each do |perm|
-  Permission.find_or_create_by!(code: perm[:code]) do |p|
-    p.name = perm[:name]
-  end
+  permission = Permission.find_or_initialize_by(code: perm[:code])
+  permission.name = perm[:name]
+  permission.save!
 end
+
+# Keep permissions in sync with the canonical list so obsolete permissions no longer appear in role forms.
+canonical_codes = permissions_data.map { |perm| perm[:code] }
+Permission.where.not(code: canonical_codes).destroy_all
 
 puts "  Created #{Permission.count} permissions"
