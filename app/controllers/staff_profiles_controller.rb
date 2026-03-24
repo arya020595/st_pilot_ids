@@ -28,18 +28,14 @@ class StaffProfilesController < ApplicationController
     current_user = User.find_by(id: params[:current_user_id])
     current_staff_profile_id = current_user&.staff_profile_id
 
-    base_scope = policy_scope(StaffProfile, policy_scope_class: StaffProfilePolicy::Scope)
-      .left_outer_joins(:user)
+    base_scope = policy_scope(StaffProfile, policy_scope_class: StaffProfilePolicy::Scope).left_outer_joins(:user)
 
     available_scope = base_scope.where(users: { id: nil })
     if current_staff_profile_id.present?
       available_scope = available_scope.or(base_scope.where(staff_profile_id: current_staff_profile_id))
     end
 
-    staff_profiles = available_scope
-                      .order(fullname: :asc)
-                      .select(:staff_profile_id, :fullname, :email)
-                      .distinct
+    staff_profiles = available_scope.order(fullname: :asc).select(:staff_profile_id, :fullname, :email).distinct
 
     render json: staff_profiles
   end
