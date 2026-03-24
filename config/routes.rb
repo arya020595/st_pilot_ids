@@ -25,18 +25,17 @@ Rails.application.routes.draw do
   resources :bi_dashboards, only: %i[index]
 
   # Staff Profile
-  resources :staff_profiles, only: %i[index show]
+  resources :staff_profiles, only: %i[index show] do
+    collection do
+      get :data
+    end
+  end
 
   # Psychometric Assessment
   resources :psychometric_assessments, only: %i[index]
 
   # KPI Assessment
   resources :kpi_assessments, only: %i[index]
-
-  # Master Data Namespace
-  namespace :master_data do
-    resources :ids_staffs, only: %i[index]
-  end
 
   # User Management Namespace
   namespace :user_management do

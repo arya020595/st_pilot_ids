@@ -18,7 +18,6 @@ staff_permission_codes = %w[
   staff_profiles.index
   psychometric_assessments.index
   kpi_assessments.index
-  master_data.ids_staffs.index
 ]
 
 staff_permission_codes.each do |code|

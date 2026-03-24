@@ -12,5 +12,5 @@ User.find_or_create_by!(email: 'admin@pilotids.com') do |user|
   user.is_active = true
 end
 
-puts "  Created #{User.count} users"
+puts "  Superadmin user created/verified"
 puts '  Default login: admin@pilotids.com / password123'

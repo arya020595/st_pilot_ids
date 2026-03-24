@@ -4,6 +4,8 @@
 class StaffProfile < ApplicationRecord
   self.primary_key = 'staff_profile_id'
 
+  has_one :user, foreign_key: :staff_profile_id, primary_key: :staff_profile_id, inverse_of: :staff_profile, dependent: :nullify
+
   validates(
     :email,
     :fullname,
