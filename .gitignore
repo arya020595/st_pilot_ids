@@ -42,3 +42,6 @@
 # Ignore vendor/bundle
 /vendor/bundle
 
+# Ignore local Docker Compose override
+/docker-compose.override.yml
+

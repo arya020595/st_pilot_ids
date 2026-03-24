@@ -8,7 +8,6 @@ permissions_data = [
   { code: 'staff_profiles.index', name: 'View Staff Profile' },
   { code: 'psychometric_assessments.index', name: 'View Psychometric Assessment' },
   { code: 'kpi_assessments.index', name: 'View KPI Assessment' },
-  { code: 'master_data.ids_staffs.index', name: 'View IDS Staff' },
   { code: 'user_management.users.index', name: 'View Users' },
   { code: 'user_management.users.show', name: 'Show User' },
   { code: 'user_management.users.create', name: 'Create User' },

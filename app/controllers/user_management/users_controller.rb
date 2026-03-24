@@ -101,6 +101,7 @@ module UserManagement
         :password_confirmation,
         :name,
         :role_id,
+        :staff_profile_id,
         :is_active
       )
     end
