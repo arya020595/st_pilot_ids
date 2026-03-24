@@ -37,9 +37,9 @@ class StaffProfilesController < ApplicationController
     end
 
     staff_profiles = available_scope
-      .order(fullname: :asc)
-      .select(:staff_profile_id, :fullname, :email)
-      .distinct
+                      .order(fullname: :asc)
+                      .select(:staff_profile_id, :fullname, :email)
+                      .distinct
 
     render json: staff_profiles
   end
