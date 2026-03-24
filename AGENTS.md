@@ -49,8 +49,6 @@ st_pilot_ids/
 │   │   ├── kpi_assessments_controller.rb          # KPI Assessment stub
 │   │   ├── concerns/
 │   │   │   └── ransack_multi_sort.rb              # Ransack + Pagy helper concern
-│   │   ├── master_data/
-│   │   │   └── ids_staffs_controller.rb           # IDS Staff listing under Master Data
 │   │   ├── user_management/
 │   │   │   ├── users_controller.rb                # Full CRUD for users
 │   │   │   └── roles_controller.rb                # Full CRUD for roles + permissions
@@ -73,8 +71,6 @@ st_pilot_ids/
 │   │   ├── bi_dashboard_policy.rb                 # resource: "bi_dashboards"
 │   │   ├── psychometric_assessment_policy.rb      # resource: "psychometric_assessments"
 │   │   ├── kpi_assessment_policy.rb               # resource: "kpi_assessments"
-│   │   ├── master_data/
-│   │   │   └── ids_staff_policy.rb                # resource: "master_data.ids_staffs"
 │   │   └── user_management/
 │   │       ├── user_policy.rb                     # resource: "user_management.users"
 │   │       └── role_policy.rb                     # resource: "user_management.roles"
@@ -99,7 +95,6 @@ st_pilot_ids/
 │       ├── psychometric_assessments/              # Index (stub)
 │       ├── kpi_assessments/                       # Index (stub)
 │       ├── dashboard/                             # Root home page
-│       ├── master_data/ids_staffs/               # Index listing
 │       ├── user_management/                       # Users and Roles CRUD
 │       ├── devise/                                # Login pages
 │       └── shared/                                # Reusable partials
@@ -156,7 +151,6 @@ Examples:
   staff_profiles.index / staff_profiles.show
   psychometric_assessments.index
   kpi_assessments.index
-  master_data.ids_staffs.index
   user_management.users.index / .show / .create / .update / .destroy
   user_management.roles.index / .show / .create / .update / .destroy
 ```
@@ -194,10 +188,10 @@ end
 
 ### Default Roles (from seeds)
 
-| Role           | Permissions                                                                                                                                     |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **superadmin** | All permissions                                                                                                                                 |
-| **staff**      | dashboard.index, bi_dashboards.index, staff_profiles.index, psychometric_assessments.index, kpi_assessments.index, master_data.ids_staffs.index |
+| Role           | Permissions                                                                                                       |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **superadmin** | All permissions                                                                                                   |
+| **staff**      | dashboard.index, bi_dashboards.index, staff_profiles.index, psychometric_assessments.index, kpi_assessments.index |
 
 ---
 
@@ -211,10 +205,6 @@ resources :bi_dashboards,           only: %i[index]
 resources :staff_profiles,          only: %i[index show]
 resources :psychometric_assessments, only: %i[index]
 resources :kpi_assessments,         only: %i[index]
-
-namespace :master_data do
-  resources :ids_staffs, only: %i[index]
-end
 
 namespace :user_management do
   resources :roles do
