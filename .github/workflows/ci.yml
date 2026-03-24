@@ -70,9 +70,9 @@ jobs:
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             BASE_REF="origin/${{ github.base_ref }}"
             git fetch origin "${{ github.base_ref }}" --depth=1
-            CHANGED_RB_FILES=$(git diff --name-only "$BASE_REF...HEAD" -- '*.rb')
+            CHANGED_RB_FILES=$(git diff --name-only --diff-filter=d "$BASE_REF...HEAD" -- '*.rb')
           else
-            CHANGED_RB_FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- '*.rb')
+            CHANGED_RB_FILES=$(git diff --name-only --diff-filter=d "${{ github.event.before }}" "${{ github.sha }}" -- '*.rb')
           fi
 
           # Skip auto-generated schema files from linting.
