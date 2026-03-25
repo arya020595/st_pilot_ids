@@ -25,11 +25,7 @@ Rails.application.routes.draw do
   resources :bi_dashboards, only: %i[index]
 
   # Staff Profile
-  resources :staff_profiles, only: %i[index show] do
-    collection do
-      get :data
-    end
-  end
+  resources :staff_profiles, only: %i[index show]
 
   # Psychometric Assessment
   resources :psychometric_assessments, only: %i[index]

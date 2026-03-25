@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_24_164000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_25_001100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,17 +42,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_24_164000) do
   create_table "staff_profiles", primary_key: "staff_profile_id", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "division", null: false
-    t.string "email", null: false
-    t.string "employment_level", null: false
     t.string "fullname", null: false
-    t.string "grade", null: false
-    t.integer "no_of_subordinate", default: 0, null: false
     t.string "position", null: false
+    t.string "supervisor_email", default: "", null: false
     t.string "supervisor_name", null: false
     t.datetime "updated_at", null: false
     t.index ["division"], name: "index_staff_profiles_on_division"
-    t.index ["email"], name: "index_staff_profiles_on_email", unique: true
-    t.index ["grade"], name: "index_staff_profiles_on_grade"
     t.index ["position"], name: "index_staff_profiles_on_position"
   end
 
@@ -71,16 +66,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_24_164000) do
     t.string "reset_password_token"
     t.bigint "role_id"
     t.integer "sign_in_count", default: 0, null: false
-    t.bigint "staff_profile_id"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
-    t.index ["staff_profile_id"], name: "index_users_on_staff_profile_id", unique: true
   end
 
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"
   add_foreign_key "users", "roles"
-  add_foreign_key "users", "staff_profiles", primary_key: "staff_profile_id", on_delete: :nullify
 end

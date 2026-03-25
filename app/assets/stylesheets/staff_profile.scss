@@ -29,7 +29,7 @@
   }
 
   .staff-profile-table {
-    min-width: 1400px;
+    min-width: 980px;
     margin-bottom: 0;
   }
 
@@ -88,10 +88,9 @@
 
   #staff-profiles-table-body tr td:nth-child(3),
   #staff-profiles-table-body tr td:nth-child(4),
+  #staff-profiles-table-body tr td:nth-child(5),
   #staff-profiles-table-body tr td:nth-child(6),
-  #staff-profiles-table-body tr td:nth-child(7),
-  #staff-profiles-table-body tr td:nth-child(8),
-  #staff-profiles-table-body tr td:nth-child(10) {
+  #staff-profiles-table-body tr td:nth-child(7) {
     text-align: left;
   }
 
