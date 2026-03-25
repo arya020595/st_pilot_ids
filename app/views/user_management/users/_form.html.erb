@@ -1,9 +1,5 @@
 <%= form_with(
-      model: [:user_management, user],
-      data: {
-        controller: 'staff-selection',
-        'staff-selection-current-user-id-value': user.id
-      }
+      model: [:user_management, user]
     ) do |form| %>
   <div class="modal-header">
     <h5 class="modal-title">
@@ -31,32 +27,17 @@
     <div class="row">
       <div class="col-md-6 mb-3">
         <%= form.label :name, class: "form-label fw-semibold" %>
-        <%= form.text_field :name, class: "form-control", placeholder: "Enter full name", required: true, data: { 'staff-selection-target': 'nameField' } %>
+        <%= form.text_field :name, class: "form-control", placeholder: "Enter full name", required: true %>
       </div>
       <div class="col-md-6 mb-3">
         <%= form.label :email, class: "form-label fw-semibold" %>
-        <%= form.email_field :email, class: "form-control", placeholder: "Enter email address", required: true, data: { 'staff-selection-target': 'emailField' } %>
+        <%= form.email_field :email, class: "form-control", placeholder: "Enter email address", required: true %>
       </div>
     </div>
 
     <div class="mb-3">
       <%= form.label :role_id, "Role", class: "form-label fw-semibold" %>
-      <%= form.collection_select :role_id, Role.order(:name), :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true, data: { 'staff-selection-target': 'roleSelect', action: 'change->staff-selection#roleChanged' } } %>
-    </div>
-
-    <div class="mb-3 d-none" data-staff-selection-target="staffContainer">
-      <%= form.label :staff_profile_id, 'Staff Name', class: 'form-label fw-semibold' %>
-      <%= form.hidden_field :staff_profile_id, data: { 'staff-selection-target': 'staffIdField' } %>
-      <div class="position-relative">
-        <input type="text"
-               class="form-control"
-               placeholder="Type to search staff name"
-               autocomplete="off"
-               value="<%= user.staff_profile&.fullname %>"
-               data-staff-selection-target="staffSearchInput"
-               data-action="focus->staff-selection#openDropdown input->staff-selection#searchChanged" />
-        <div class="staff-search-dropdown d-none" data-staff-selection-target="staffDropdown"></div>
-      </div>
+      <%= form.collection_select :role_id, Role.order(:name), :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true } %>
     </div>
 
     <div class="row">

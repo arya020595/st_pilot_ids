@@ -20,34 +20,21 @@
             <col />
             <col />
             <col />
-            <col />
-            <col />
-            <col />
           </colgroup>
           <thead class="header-row">
             <tr class="header-row">
               <th></th>
               <th><%= sort_link(@q, :staff_profile_id, 'Staff ID') %></th>
-              <th><%= sort_link(@q, :email, 'Email') %></th>
               <th><%= sort_link(@q, :fullname, 'Full Name') %></th>
-              <th><%= sort_link(@q, :grade, 'Grade') %></th>
               <th><%= sort_link(@q, :position, 'Position / Role') %></th>
               <th><%= sort_link(@q, :division, 'Division / Dept') %></th>
               <th><%= sort_link(@q, :supervisor_name, 'Supervisor Name') %></th>
-              <th><%= sort_link(@q, :no_of_subordinate, 'No. of Subordinate') %></th>
-              <th><%= sort_link(@q, :employment_level, 'Employment Level') %></th>
+              <th><%= sort_link(@q, :supervisor_email, 'Supervisor Email') %></th>
             </tr>
             <tr class="staff-filter-row">
               <th></th>
               <th></th>
               <th></th>
-              <th></th>
-              <th>
-                <%= f.search_field :grade_cont,
-                      class: 'form-control form-control-sm',
-                      placeholder: 'Type grade',
-                      data: { action: 'input->search-form#autoSubmit' } %>
-              </th>
               <th>
                 <%= f.search_field :position_cont,
                       class: 'form-control form-control-sm',
@@ -60,7 +47,6 @@
                       placeholder: 'Type division',
                       data: { action: 'input->search-form#autoSubmit' } %>
               </th>
-              <th></th>
               <th></th>
               <th></th>
             </tr>
@@ -76,19 +62,16 @@
                     <% end %>
                   </td>
                   <td class="staff-id-value"><%= format('STF_%03d', staff_profile.staff_profile_id) %></td>
-                  <td><%= staff_profile.email %></td>
                   <td><%= staff_profile.fullname %></td>
-                  <td><%= staff_profile.grade %></td>
                   <td><%= staff_profile.position %></td>
                   <td><%= staff_profile.division %></td>
                   <td><%= staff_profile.supervisor_name %></td>
-                  <td><%= staff_profile.no_of_subordinate %></td>
-                  <td><%= staff_profile.employment_level %></td>
+                  <td><%= staff_profile.supervisor_email %></td>
                 </tr>
               <% end %>
             <% else %>
               <tr>
-                <td colspan="10" class="text-center text-muted py-4">
+                <td colspan="7" class="text-center text-muted py-4">
                   No staff profiles found.
                 </td>
               </tr>

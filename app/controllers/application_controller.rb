@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
   layout :set_layout
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   private
 
@@ -43,5 +44,10 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:alert] = 'You are not authorized to perform this action.'
     redirect_to(request.referrer || dashboard_path)
+  end
+
+  def record_not_found
+    flash[:alert] = 'The requested record was not found or may have been deleted.'
+    redirect_back(fallback_location: dashboard_path)
   end
 end

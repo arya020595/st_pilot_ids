@@ -4,117 +4,115 @@ puts 'Creating staff profiles...'
 
 staff_profiles_data = [
   {
-    email: 'amirul_ids@gmail.com', fullname: 'Amirul Amirajafri', grade: '48',
-    position: 'Senior Research Associate', division: 'IT Department', supervisor_name: 'Rashid Johan',
-    no_of_subordinate: 4, employment_level: 'Senior Associate'
+    fullname: 'Sharlyna Grace Sebastian',
+    position: 'Research Assistant', division: 'CRO Office', supervisor_name: 'Victor Sikain',
+    supervisor_email: 'victor.sikain@ids.org.my'
   },
   {
-    email: 'fikri_ids@gmail.com', fullname: 'Fikri Haikal', grade: '51',
-    position: 'Senior Research Associate', division: 'Finance Department', supervisor_name: 'Farah Nabila',
-    no_of_subordinate: 8, employment_level: 'Senior Associate'
+    fullname: 'Wesly Chong Ming Teck',
+    position: 'Research Assistant', division: 'SPPD', supervisor_name: 'Mansalasah Musa',
+    supervisor_email: 'mansalasah.musa@ids.org.my'
   },
   {
-    email: 'nadia_ids@gmail.com', fullname: 'Nadia Natasha', grade: '44',
-    position: 'Research Associate', division: 'Admin Department', supervisor_name: 'Suhaila Ahmad',
-    no_of_subordinate: 6, employment_level: 'Associate'
+    fullname: 'Sarah J. Marican',
+    position: 'Research Assistant', division: 'GED', supervisor_name: 'Masmidah Arsah',
+    supervisor_email: 'masmidah.arsah@ids.org.my'
   },
   {
-    email: 'sofea_ids@gmail.com', fullname: 'Sofea Aryana', grade: '41',
-    position: 'Research Officer', division: 'IT Department', supervisor_name: 'Amir Hamzah',
-    no_of_subordinate: 2, employment_level: 'Officer'
+    fullname: 'Nur Fazila Binti Jainal',
+    position: 'Research Assistant', division: 'SPPD', supervisor_name: 'Mansalasah Musa',
+    supervisor_email: 'mansalasah.musa@ids.org.my'
   },
   {
-    email: 'abubakar_ids@gmail.com', fullname: 'Abu Bakar', grade: '41',
-    position: 'Research Officer', division: 'HR Department', supervisor_name: 'Salina Mohd',
-    no_of_subordinate: 3, employment_level: 'Officer'
+    fullname: 'Faezah Hassan',
+    position: 'Research Officer', division: 'SPPD', supervisor_name: 'Mansalasah Musa',
+    supervisor_email: 'mansalasah.musa@ids.org.my'
   },
   {
-    email: 'iqmal_ids@gmail.com', fullname: 'Muhd Iqmal', grade: '48',
-    position: 'Senior Research Associate', division: 'Corporate Communication', supervisor_name: 'Rina Malik',
-    no_of_subordinate: 1, employment_level: 'Senior Associate'
+    fullname: 'Roslina Binti Gumpar',
+    position: 'Research Officer', division: 'GED', supervisor_name: 'Masmidah Arsah',
+    supervisor_email: 'masmidah.arsah@ids.org.my'
   },
   {
-    email: 'nurfatihah_ids@gmail.com', fullname: 'Nur Fatihah', grade: '44',
-    position: 'Research Associate', division: 'Finance Department', supervisor_name: 'Farah Nabila',
-    no_of_subordinate: 2, employment_level: 'Associate'
+    fullname: 'Addellyne Christie Albert',
+    position: 'Research Officer', division: 'RDD', supervisor_name: 'Anita Limjoon',
+    supervisor_email: 'anita.limjoon@ids.org.my'
   },
   {
-    email: 'danial_ids@gmail.com', fullname: 'Danial Khairi', grade: '41',
-    position: 'Research Officer', division: 'IT Department', supervisor_name: 'Rashid Johan',
-    no_of_subordinate: 2, employment_level: 'Officer'
+    fullname: 'Sophia Hong @ Hong Sen Yee',
+    position: 'Research Officer', division: 'SDD', supervisor_name: 'Masneh Maziah',
+    supervisor_email: 'masneh.maziah@ids.org.my'
   },
   {
-    email: 'haziq_ids@gmail.com', fullname: 'Haziq Azman', grade: '36',
-    position: 'Research Assistant', division: 'Admin Department', supervisor_name: 'Suhaila Ahmad',
-    no_of_subordinate: 0, employment_level: 'Assistant'
+    fullname: 'Nurul Hafizah Binti Abd Suhud',
+    position: 'Research Officer', division: 'SDD', supervisor_name: 'Masneh Maziah',
+    supervisor_email: 'masneh.maziah@ids.org.my'
   },
   {
-    email: 'ain_ids@gmail.com', fullname: 'Nur Ain Syazwani', grade: '29',
-    position: 'Research Assistant', division: 'HR Department', supervisor_name: 'Salina Mohd',
-    no_of_subordinate: 0, employment_level: 'Assistant'
+    fullname: 'Khairulazizan Safwan Bin Maidol',
+    position: 'Research Officer', division: 'SDD', supervisor_name: 'Masneh Maziah',
+    supervisor_email: 'masneh.maziah@ids.org.my'
   },
   {
-    email: 'shazwan_ids@gmail.com', fullname: 'Shazwan Iskandar', grade: '41',
-    position: 'Research Officer', division: 'Procurement', supervisor_name: 'Rafidah Ismail',
-    no_of_subordinate: 1, employment_level: 'Officer'
+    fullname: 'Lailah Chung',
+    position: 'Research Associate', division: 'SPPD', supervisor_name: 'Mansalasah Musa',
+    supervisor_email: 'mansalasah.musa@ids.org.my'
   },
   {
-    email: 'syasya_ids@gmail.com', fullname: 'Syasya Huda', grade: '36',
-    position: 'Research Assistant', division: 'HR Department', supervisor_name: 'Salina Mohd',
-    no_of_subordinate: 0, employment_level: 'Assistant'
+    fullname: 'Hajah Royaini Matusin',
+    position: 'Research Associate', division: 'RDD', supervisor_name: 'Anita Limjoon',
+    supervisor_email: 'anita.limjoon@ids.org.my'
   },
   {
-    email: 'hakim_ids@gmail.com', fullname: 'Hakim Luqman', grade: '44',
-    position: 'Research Associate', division: 'IT Department', supervisor_name: 'Rashid Johan',
-    no_of_subordinate: 5, employment_level: 'Associate'
+    fullname: 'Noralizah Halid',
+    position: 'Research Associate', division: 'GED', supervisor_name: 'Masmidah Arsah',
+    supervisor_email: 'masmidah.arsah@ids.org.my'
   },
   {
-    email: 'khairul_ids@gmail.com', fullname: 'Khairul Nizam', grade: '29',
-    position: 'Research Assistant', division: 'Corporate Communication', supervisor_name: 'Rina Malik',
-    no_of_subordinate: 0, employment_level: 'Assistant'
+    fullname: 'Mohd Rizal Bin Muslihin',
+    position: 'Research Associate', division: 'GED', supervisor_name: 'Masmidah Arsah',
+    supervisor_email: 'masmidah.arsah@ids.org.my'
   },
   {
-    email: 'nurul_ids@gmail.com', fullname: 'Nurul Hidayah', grade: '36',
-    position: 'Research Assistant', division: 'Corporate Communication', supervisor_name: 'Rina Malik',
-    no_of_subordinate: 1, employment_level: 'Assistant'
+    fullname: 'Siti Farizan Omar',
+    position: 'Research Associate', division: 'SDD', supervisor_name: 'Masneh Maziah',
+    supervisor_email: 'masneh.maziah@ids.org.my'
   },
   {
-    email: 'aisyah_ids@gmail.com', fullname: 'Aisyah Sofina', grade: '41',
-    position: 'Research Officer', division: 'Integrity Unit', supervisor_name: 'Hamdan Salleh',
-    no_of_subordinate: 2, employment_level: 'Officer'
+    fullname: 'Fiona V. Loijon',
+    position: 'Research Associate', division: 'RDD', supervisor_name: 'Anita Limjoon',
+    supervisor_email: 'anita.limjoon@ids.org.my'
   },
   {
-    email: 'zul_ids@gmail.com', fullname: 'Zulhilmi Razak', grade: '48',
-    position: 'Senior Research Associate', division: 'IT Department', supervisor_name: 'Rashid Johan',
-    no_of_subordinate: 7, employment_level: 'Senior Associate'
+    fullname: 'Juliana P. J Ringgigon',
+    position: 'Senior Research Associate', division: 'SPPD', supervisor_name: 'Mansalasah Musa',
+    supervisor_email: 'mansalasah.musa@ids.org.my'
   },
   {
-    email: 'amira_ids@gmail.com', fullname: 'Amira Syahira', grade: '29',
-    position: 'Research Assistant', division: 'Finance Department', supervisor_name: 'Farah Nabila',
-    no_of_subordinate: 0, employment_level: 'Assistant'
+    fullname: 'Masmidah Arsah',
+    position: 'Senior Research Associate', division: 'Head of GED', supervisor_name: 'Victor Sikain',
+    supervisor_email: 'victor.sikain@ids.org.my'
   },
   {
-    email: 'zafirah_ids@gmail.com', fullname: 'Zafirah Adiba', grade: '36',
-    position: 'Research Assistant', division: 'Internal Audit', supervisor_name: 'Hamdan Salleh',
-    no_of_subordinate: 1, employment_level: 'Assistant'
+    fullname: 'Masneh Abd. Ghani',
+    position: 'Senior Research Associate', division: 'Head of SDD', supervisor_name: 'Victor Sikain',
+    supervisor_email: 'victor.sikain@ids.org.my'
   },
   {
-    email: 'fahmi_ids@gmail.com', fullname: 'Fahmi Hakimi', grade: '44',
-    position: 'Research Associate', division: 'Operations', supervisor_name: 'Hamdan Salleh',
-    no_of_subordinate: 4, employment_level: 'Associate'
+    fullname: 'Mansalasah Musa',
+    position: 'Senior Research Associate', division: 'Head of SPPD', supervisor_name: 'Victor Sikain',
+    supervisor_email: 'victor.sikain@ids.org.my'
   }
 ]
 
-staff_profiles_data.each do |profile|
-  staff_profile = StaffProfile.find_or_initialize_by(email: profile[:email])
+staff_profiles_data.each_with_index do |profile, index|
+  staff_profile = StaffProfile.find_or_initialize_by(staff_profile_id: index + 1)
   staff_profile.assign_attributes(
     fullname: profile[:fullname],
-    grade: profile[:grade],
     position: profile[:position],
     division: profile[:division],
     supervisor_name: profile[:supervisor_name],
-    no_of_subordinate: profile[:no_of_subordinate],
-    employment_level: profile[:employment_level]
+    supervisor_email: profile[:supervisor_email]
   )
   staff_profile.save!
 end

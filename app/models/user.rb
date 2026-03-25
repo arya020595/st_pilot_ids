@@ -6,13 +6,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :trackable
 
-  self.ignored_columns += ['ids_staff_id']
+  self.ignored_columns += ['ids_staff_id', 'staff_profile_id']
 
   belongs_to :role, optional: true
-  belongs_to :staff_profile, foreign_key: :staff_profile_id, primary_key: :staff_profile_id, optional: true
 
   validates :name, presence: true
-  validates :staff_profile_id, uniqueness: true, allow_nil: true
 
   # Check if user has a specific permission code
   # Superadmin role bypasses all permission checks
