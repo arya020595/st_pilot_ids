@@ -5,5 +5,5 @@ class KpiAssessment < ApplicationRecord
 
   has_many :quarters, dependent: :destroy
 
-  validates :reviewer_email, presence: true
+  validates :reviewer_email, presence: true, allow_nil: true
 end

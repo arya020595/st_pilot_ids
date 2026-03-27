@@ -14,7 +14,7 @@ class PsychometricAssessmentsController < ApplicationController
     return PsychometricAssessment.new if current_user.superadmin?
 
     staff_email = current_user.email
-    staff_profile = StaffProfile.find_by(supervisor_email: staff_email)
+      staff_profile = StaffProfile.find_by(email: staff_email)
     staff_profile ||= StaffProfile.find_by(fullname: current_user.name) if current_user.name.present?
 
     return PsychometricAssessment.new unless staff_profile

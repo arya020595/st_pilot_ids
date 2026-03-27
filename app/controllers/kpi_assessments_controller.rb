@@ -175,23 +175,23 @@ class KpiAssessmentsController < ApplicationController
     end
   end
 
+
   def show
-    authorize :kpi_assessment, :index?
+    authorize :kpi_assessment, :show?
 
     build_assessment_view_data
   end
 
   def edit
-    authorize :kpi_assessment, :index?
+    authorize :kpi_assessment, :edit?
 
     build_assessment_view_data
   end
 
   def update
-    authorize :kpi_assessment, :index?
+    authorize :kpi_assessment, :update?
 
     ensure_assessment_records_for_update!
-
     missing_quality = missing_quality_for_position(@assessment.position)
     missing_quantity = missing_quantity_score_fields
 
@@ -230,8 +230,8 @@ class KpiAssessmentsController < ApplicationController
 
     if @selected_staff.blank?
       redirect_to new_kpi_assessment_path,
-                  alert: 'Please select a staff from your allowed review list before submitting.'
-      return
+    def destroy
+      authorize :kpi_assessment, :destroy?
     end
 
     if missing_quality_score_fields.any?
@@ -504,8 +504,11 @@ class KpiAssessmentsController < ApplicationController
     fields.index_with { |field| to_decimal(params[field]) }
   end
 
+  
   def to_decimal(value)
     BigDecimal(value.to_s.presence || '0')
+  rescue ArgumentError, TypeError
+    0.to_d
   end
 
   def current_quarter_name
