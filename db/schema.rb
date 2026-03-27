@@ -170,17 +170,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_26_093000) do
   create_table "staff_profiles", primary_key: "staff_profile_id", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "division", null: false
-    t.string "email", null: false
-    t.string "employment_level", null: false
     t.string "fullname", null: false
-    t.string "grade", null: false
-    t.integer "no_of_subordinate", default: 0, null: false
     t.string "position", null: false
+    t.string "supervisor_email", default: "", null: false
     t.string "supervisor_name", null: false
     t.datetime "updated_at", null: false
     t.index ["division"], name: "index_staff_profiles_on_division"
-    t.index ["email"], name: "index_staff_profiles_on_email", unique: true
-    t.index ["grade"], name: "index_staff_profiles_on_grade"
     t.index ["position"], name: "index_staff_profiles_on_position"
   end
 

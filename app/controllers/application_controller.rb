@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
 
   # Override Devise method to redirect users after sign in
   def after_sign_in_path_for(_resource)
-    dashboard_path
+    bi_dashboards_path
   end
 
   # Override Devise method to redirect after sign out
