@@ -23,18 +23,28 @@
           </colgroup>
           <thead class="header-row">
             <tr class="header-row">
-              <th></th>
-              <th><%= sort_link(@q, :staff_profile_id, 'Staff ID') %></th>
-              <th><%= sort_link(@q, :fullname, 'Full Name') %></th>
+              <th class="staff-filter-toggle-cell" rowspan="2">
+                <button
+                  type="button"
+                  class="staff-filter-toggle-btn"
+                  data-action="click->search-form#toggleFilters"
+                  data-search-form-target="toggleButton"
+                  style="all: unset; appearance: none; -webkit-appearance: none; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: #ffffff; background: transparent; border: 0; box-shadow: none; border-radius: 999px;"
+                  aria-label="Toggle filters"
+                  aria-expanded="true"
+                  title="Hide filters"
+                >
+                  <i class="bi bi-funnel-fill" data-search-form-target="toggleIcon" aria-hidden="true" style="color: #ffffff;"></i>
+                </button>
+              </th>
+              <th rowspan="2"><%= sort_link(@q, :staff_profile_id, 'Staff ID') %></th>
+              <th rowspan="2"><%= sort_link(@q, :fullname, 'Full Name') %></th>
               <th><%= sort_link(@q, :position, 'Position / Role') %></th>
               <th><%= sort_link(@q, :division, 'Division / Dept') %></th>
-              <th><%= sort_link(@q, :supervisor_name, 'Supervisor Name') %></th>
-              <th><%= sort_link(@q, :supervisor_email, 'Supervisor Email') %></th>
+              <th rowspan="2"><%= sort_link(@q, :supervisor_name, 'Supervisor Name') %></th>
+              <th rowspan="2"><%= sort_link(@q, :supervisor_email, 'Supervisor Email') %></th>
             </tr>
-            <tr class="staff-filter-row">
-              <th></th>
-              <th></th>
-              <th></th>
+            <tr class="staff-filter-row" data-search-form-target="filterRow">
               <th>
                 <%= f.search_field :position_cont,
                       class: 'form-control form-control-sm',
@@ -47,8 +57,6 @@
                       placeholder: 'Type division',
                       data: { action: 'input->search-form#autoSubmit' } %>
               </th>
-              <th></th>
-              <th></th>
             </tr>
           </thead>
           <tbody id="staff-profiles-table-body">
