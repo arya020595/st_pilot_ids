@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class CreateKpiAssessmentTables < ActiveRecord::Migration[8.1]
   def change
     create_table :kpi_assessments do |t|
@@ -12,11 +13,13 @@ class CreateKpiAssessmentTables < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_foreign_key :kpi_assessments,
-            :staff_profiles,
-            column: :staff_profile_id,
-            primary_key: :staff_profile_id,
-            validate: false
+    add_foreign_key(
+      :kpi_assessments,
+      :staff_profiles,
+      column: :staff_profile_id,
+      primary_key: :staff_profile_id,
+      validate: false
+    )
     add_index :kpi_assessments, :staff_profile_id
 
     create_table :quarters do |t|
@@ -136,3 +139,4 @@ class CreateKpiAssessmentTables < ActiveRecord::Migration[8.1]
     add_index :quality_based_kpis, :other_involvement_id
   end
 end
+# rubocop:enable Metrics/ClassLength
