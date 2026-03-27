@@ -1,7 +1,7 @@
 // Isolated styles for sidebar only
 #sidebar {
   &.sidebar-bg {
-    background-image: url("bg_sidebar.png");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.584), rgba(0, 0, 0, 0.605)), url("bg_sidebar.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
