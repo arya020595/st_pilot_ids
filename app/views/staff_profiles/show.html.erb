@@ -13,22 +13,16 @@
             <dl class="row mb-0">
               <dt class="col-sm-4 text-muted">Staff ID:</dt>
               <dd class="col-sm-8 fw-semibold"><%= format('STF_%03d', @staff_profile.staff_profile_id) %></dd>
-              <dt class="col-sm-4 text-muted">Email:</dt>
-              <dd class="col-sm-8"><%= @staff_profile.email %></dd>
               <dt class="col-sm-4 text-muted">Full Name:</dt>
               <dd class="col-sm-8"><%= @staff_profile.fullname %></dd>
-              <dt class="col-sm-4 text-muted">Grade:</dt>
-              <dd class="col-sm-8"><%= @staff_profile.grade %></dd>
               <dt class="col-sm-4 text-muted">Position / Role:</dt>
               <dd class="col-sm-8"><%= @staff_profile.position %></dd>
               <dt class="col-sm-4 text-muted">Division / Dept:</dt>
               <dd class="col-sm-8"><%= @staff_profile.division %></dd>
               <dt class="col-sm-4 text-muted">Supervisor Name:</dt>
               <dd class="col-sm-8"><%= @staff_profile.supervisor_name %></dd>
-              <dt class="col-sm-4 text-muted">No. of Subordinate:</dt>
-              <dd class="col-sm-8"><%= @staff_profile.no_of_subordinate %></dd>
-              <dt class="col-sm-4 text-muted">Employment Level:</dt>
-              <dd class="col-sm-8"><%= @staff_profile.employment_level %></dd>
+              <dt class="col-sm-4 text-muted">Supervisor Email:</dt>
+              <dd class="col-sm-8"><%= @staff_profile.supervisor_email %></dd>
               <dt class="col-sm-4 text-muted">Created At:</dt>
               <dd class="col-sm-8"><%= @staff_profile.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
               <dt class="col-sm-4 text-muted">Updated At:</dt>

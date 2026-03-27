@@ -23,11 +23,13 @@ export default class extends Controller {
   static STORAGE_KEY = "searchFormFocusedInput";
   static PAGE_PARAM = "page";
   static FOCUSABLE_INPUT_TYPES = ["INPUT", "TEXTAREA", "SELECT"];
+  static targets = ["filterRow", "toggleButton", "toggleIcon"];
 
   /**
    * Lifecycle: Initialize controller and restore focus state
    */
   connect() {
+    this.initializeFilterToggle();
     this.restoreFocusState();
   }
 
@@ -68,6 +70,23 @@ export default class extends Controller {
   }
 
   /**
+   * Toggle filter row visibility from icon button
+   *
+   * @param {Event} event - Click event
+   * @public
+   */
+  toggleFilters(event) {
+    event.preventDefault();
+
+    if (!this.hasFilterRowTarget) {
+      return;
+    }
+
+    this.filtersVisible = !this.filtersVisible;
+    this.applyFilterVisibility();
+  }
+
+  /**
    * Reset pagination and rebuild URL on form submission
    * Stores focus state for restoration after page reload
    *
@@ -89,6 +108,84 @@ export default class extends Controller {
   }
 
   // Private methods
+
+  /**
+   * Initialize filter row visibility state for table filters
+   * Defaults to open when any filter input has a value.
+   *
+   * @private
+   */
+  initializeFilterToggle() {
+    if (!this.hasFilterRowTarget) {
+      return;
+    }
+
+    this.filtersVisible = this.hasActiveFilters();
+    this.applyFilterVisibility();
+  }
+
+  /**
+   * Check if any filter input already has a value
+   *
+   * @returns {boolean} True when at least one filter is active
+   * @private
+   */
+  hasActiveFilters() {
+    if (!this.hasFilterRowTarget) {
+      return false;
+    }
+
+    const filterInputs = this.filterRowTarget.querySelectorAll(
+      "input, select, textarea",
+    );
+
+    return Array.from(filterInputs).some((input) => {
+      const value = input.value;
+      return (
+        value !== null && value !== undefined && value.toString().trim() !== ""
+      );
+    });
+  }
+
+  /**
+   * Apply current filter row visibility and toggle icon state
+   *
+   * @private
+   */
+  applyFilterVisibility() {
+    if (!this.hasFilterRowTarget) {
+      return;
+    }
+
+    this.filterRowTarget.classList.toggle("d-none", !this.filtersVisible);
+
+    if (this.hasToggleButtonTarget) {
+      this.toggleButtonTarget.classList.toggle(
+        "is-active",
+        this.filtersVisible,
+      );
+      this.toggleButtonTarget.setAttribute(
+        "title",
+        this.filtersVisible ? "Hide filters" : "Show filters",
+      );
+      this.toggleButtonTarget.setAttribute(
+        "aria-label",
+        this.filtersVisible ? "Hide filters" : "Show filters",
+      );
+      this.toggleButtonTarget.setAttribute(
+        "aria-expanded",
+        this.filtersVisible ? "true" : "false",
+      );
+    }
+
+    if (this.hasToggleIconTarget) {
+      this.toggleIconTarget.classList.toggle(
+        "bi-funnel-fill",
+        this.filtersVisible,
+      );
+      this.toggleIconTarget.classList.toggle("bi-funnel", !this.filtersVisible);
+    }
+  }
 
   /**
    * Submit the form programmatically

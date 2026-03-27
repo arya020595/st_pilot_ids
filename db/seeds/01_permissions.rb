@@ -8,7 +8,6 @@ permissions_data = [
   { code: 'staff_profiles.index', name: 'View Staff Profile' },
   { code: 'psychometric_assessments.index', name: 'View Psychometric Assessment' },
   { code: 'kpi_assessments.index', name: 'View KPI Assessment' },
-  { code: 'master_data.ids_staffs.index', name: 'View IDS Staff' },
   { code: 'user_management.users.index', name: 'View Users' },
   { code: 'user_management.users.show', name: 'Show User' },
   { code: 'user_management.users.create', name: 'Create User' },
@@ -22,9 +21,13 @@ permissions_data = [
 ]
 
 permissions_data.each do |perm|
-  Permission.find_or_create_by!(code: perm[:code]) do |p|
-    p.name = perm[:name]
-  end
+  permission = Permission.find_or_initialize_by(code: perm[:code])
+  permission.name = perm[:name]
+  permission.save!
 end
+
+# Keep permissions in sync with the canonical list so obsolete permissions no longer appear in role forms.
+canonical_codes = permissions_data.map { |perm| perm[:code] }
+Permission.where.not(code: canonical_codes).destroy_all
 
 puts "  Created #{Permission.count} permissions"

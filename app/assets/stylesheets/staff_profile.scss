@@ -9,12 +9,12 @@
   .staff_profiles_page h1 {
     background-color: #1f5385;
     color: #ffffff;
-    padding: 14px 20px;
-    font-size: 34px;
+    padding: 12px 16px;
+    font-size: 20px;
     border-radius: 8px;
-    font-weight: 900;
-    margin-bottom: 18px;
-    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 14px;
+    line-height: 1.2;
   }
 
   .table-responsive.staff-profile-table-wrap {
@@ -29,7 +29,7 @@
   }
 
   .staff-profile-table {
-    min-width: 1400px;
+    min-width: 980px;
     margin-bottom: 0;
   }
 
@@ -41,6 +41,53 @@
   .staff-id-col {
     width: 140px;
     min-width: 140px;
+  }
+
+  .staff-filter-toggle-cell {
+    width: 64px;
+    min-width: 64px;
+  }
+
+  .staff-filter-toggle-btn {
+    all: unset;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    color: #ffffff !important;
+    background-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: none !important;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 999px;
+  }
+
+  .staff-filter-toggle-btn i {
+    color: #ffffff !important;
+    font-size: 14px;
+  }
+
+  .staff-filter-toggle-btn i::before {
+    color: #ffffff !important;
+  }
+
+  .staff-filter-toggle-btn:hover,
+  .staff-filter-toggle-btn:focus {
+    color: #ffffff !important;
+    background-color: transparent;
+    box-shadow: none !important;
+    outline: none;
+  }
+
+  .staff-filter-toggle-btn.is-active {
+    color: #ffffff !important;
+    background-color: transparent;
   }
 
   .table thead tr.header-row th {
@@ -88,10 +135,9 @@
 
   #staff-profiles-table-body tr td:nth-child(3),
   #staff-profiles-table-body tr td:nth-child(4),
+  #staff-profiles-table-body tr td:nth-child(5),
   #staff-profiles-table-body tr td:nth-child(6),
-  #staff-profiles-table-body tr td:nth-child(7),
-  #staff-profiles-table-body tr td:nth-child(8),
-  #staff-profiles-table-body tr td:nth-child(10) {
+  #staff-profiles-table-body tr td:nth-child(7) {
     text-align: left;
   }
 

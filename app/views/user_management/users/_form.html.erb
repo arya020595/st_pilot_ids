@@ -1,10 +1,13 @@
-<%= form_with(model: [:user_management, user]) do |form| %>
+<%= form_with(
+      model: [:user_management, user]
+    ) do |form| %>
   <div class="modal-header">
     <h5 class="modal-title">
       <strong><%= user.persisted? ? 'Edit User' : 'Add New User' %></strong>
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
+
   <div class="modal-body">
     <% if user.errors.any? %>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -20,6 +23,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <% end %>
+
     <div class="row">
       <div class="col-md-6 mb-3">
         <%= form.label :name, class: "form-label fw-semibold" %>
@@ -30,10 +34,12 @@
         <%= form.email_field :email, class: "form-control", placeholder: "Enter email address", required: true %>
       </div>
     </div>
+
     <div class="mb-3">
       <%= form.label :role_id, "Role", class: "form-label fw-semibold" %>
-      <%= form.collection_select :role_id, Role.all, :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true } %>
+      <%= form.collection_select :role_id, Role.order(:name), :id, :name, { include_blank: "Select Role" }, { class: "form-select", required: true } %>
     </div>
+
     <div class="row">
       <div class="col-md-6 mb-3">
         <%= form.label :password, class: "form-label fw-semibold" %>
@@ -55,6 +61,7 @@
             required: user.new_record? %>
       </div>
     </div>
+
     <div class="mb-3">
       <div class="form-check form-switch">
         <%= form.check_box :is_active, class: "form-check-input", role: "switch" %>
@@ -63,6 +70,7 @@
       </div>
     </div>
   </div>
+
   <div class="modal-footer">
     <%= button_tag type: :submit, class: "btn btn-success" do %>
       <i class="bi bi-save-fill text-white me-1"></i>Save
