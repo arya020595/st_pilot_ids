@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # Controller for KPI Assessment listing.
+# rubocop:disable Metrics/ClassLength
 class KpiAssessmentsController < ApplicationController
   QUALITY_SCORE_FIELDS = %w[
     proposal_preparation
@@ -71,6 +72,104 @@ class KpiAssessmentsController < ApplicationController
     'D' => %w[communication_skill collaboration_teamwork problem_solving leadership attention_details].freeze,
     'E' => %w[ideas_platform any_social_media_platform ids_watch_column others].freeze
   }.freeze
+
+  RESEARCH_FIELDS = %w[
+    proposal_preparation
+    proposal_presentation
+    data_collection
+    data_entry_and_cleaning
+    report_writing
+    analysis_of_data
+    presentation_of_findings
+  ].freeze
+
+  FINANCIAL_FIELDS = %w[
+    budgeting
+    record_keeping
+    cashflow_management
+    compliance
+  ].freeze
+
+  SOFT_FIELDS = %w[
+    writing_skill
+    presentation_skill
+    computer_skill
+    management_skill
+    statistical_knowledge
+  ].freeze
+
+  HARD_FIELDS = %w[
+    communication_skill
+    collaboration_teamwork
+    problem_solving
+    leadership
+    attention_details
+  ].freeze
+
+  OTHER_FIELDS = %w[
+    ideas_platform
+    any_social_media_platform
+    ids_watch_column
+    others
+  ].freeze
+
+  QUALITY_SECTIONS = [
+    {
+      title: 'A. Research Work Related',
+      section_weight: '70%',
+      rows: [
+        ['proposal_preparation', 'Proposal Preparation', '10%'],
+        ['proposal_presentation', 'Proposal Presentation', '10%'],
+        ['data_collection', 'Data Collection', '10%'],
+        ['data_entry_and_cleaning', 'Data Entry and Cleaning', '10%'],
+        ['report_writing', 'Report Writing', '30%'],
+        ['analysis_of_data', 'Analysis of Data', '15%'],
+        ['presentation_of_findings', 'Presentation of Findings', '15%']
+      ]
+    },
+    {
+      title: 'B. Financial Management',
+      section_weight: '10%',
+      rows: [
+        ['budgeting', 'Budgeting', '25%'],
+        ['record_keeping', 'Record-keeping', '25%'],
+        ['cashflow_management', 'Cash-flow Management', '25%'],
+        ['compliance', 'Compliance', '25%']
+      ]
+    },
+    {
+      title: 'C. Soft-Skill',
+      section_weight: '10%',
+      rows: [
+        ['writing_skill', 'Writing Skill', '25%'],
+        ['presentation_skill', 'Presentation Skill', '25%'],
+        ['computer_skill', 'Computer Skills', '25%'],
+        ['management_skill', 'Management Skill', '25%'],
+        ['statistical_knowledge', 'Statistical Knowledge', '25%']
+      ]
+    },
+    {
+      title: 'D. Hard-skill',
+      section_weight: '5%',
+      rows: [
+        ['communication_skill', 'Communication Skill', '20%'],
+        ['collaboration_teamwork', 'Collaboration and Team Work', '20%'],
+        ['problem_solving', 'Problem Solving', '20%'],
+        ['leadership', 'Leadership', '20%'],
+        ['attention_details', 'Attention to Details', '20%']
+      ]
+    },
+    {
+      title: 'E. Other Involvement',
+      section_weight: '5%',
+      rows: [
+        ['ideas_platform', 'IDEAS Platform', '25%'],
+        ['any_social_media_platform', 'Any Social Media Platforms', '25%'],
+        ['ids_watch_column', 'IDS Watch Column', '25%'],
+        ['others', 'Others', '25%']
+      ]
+    }
+  ].freeze
 
   DEFAULT_FULL_SCORES = {
     'proposal_preparation' => 10,
@@ -168,11 +267,10 @@ class KpiAssessmentsController < ApplicationController
       return
     end
 
-    if missing_quality_score_fields.any? || @selected_staff_id.blank?
-      redirect_to new_kpi_assessment_path(previous_step_params),
-                  alert: 'Please fill in all quality-based scores before continuing.'
-      return
-    end
+    return unless missing_quality_score_fields.any? || @selected_staff_id.blank?
+
+    redirect_to new_kpi_assessment_path(previous_step_params),
+                alert: 'Please fill in all quality-based scores before continuing.'
   end
 
   def show
@@ -325,63 +423,7 @@ class KpiAssessmentsController < ApplicationController
   end
 
   def quality_sections
-    [
-      {
-        title: 'A. Research Work Related',
-        section_weight: '70%',
-        rows: [
-          ['proposal_preparation', 'Proposal Preparation', '10%'],
-          ['proposal_presentation', 'Proposal Presentation', '10%'],
-          ['data_collection', 'Data Collection', '10%'],
-          ['data_entry_and_cleaning', 'Data Entry and Cleaning', '10%'],
-          ['report_writing', 'Report Writing', '30%'],
-          ['analysis_of_data', 'Analysis of Data', '15%'],
-          ['presentation_of_findings', 'Presentation of Findings', '15%']
-        ]
-      },
-      {
-        title: 'B. Financial Management',
-        section_weight: '10%',
-        rows: [
-          ['budgeting', 'Budgeting', '25%'],
-          ['record_keeping', 'Record-keeping', '25%'],
-          ['cashflow_management', 'Cash-flow Management', '25%'],
-          ['compliance', 'Compliance', '25%']
-        ]
-      },
-      {
-        title: 'C. Soft-Skill',
-        section_weight: '10%',
-        rows: [
-          ['writing_skill', 'Writing Skill', '25%'],
-          ['presentation_skill', 'Presentation Skill', '25%'],
-          ['computer_skill', 'Computer Skills', '25%'],
-          ['management_skill', 'Management Skill', '25%'],
-          ['statistical_knowledge', 'Statistical Knowledge', '25%']
-        ]
-      },
-      {
-        title: 'D. Hard-skill',
-        section_weight: '5%',
-        rows: [
-          ['communication_skill', 'Communication Skill', '20%'],
-          ['collaboration_teamwork', 'Collaboration and Team Work', '20%'],
-          ['problem_solving', 'Problem Solving', '20%'],
-          ['leadership', 'Leadership', '20%'],
-          ['attention_details', 'Attention to Details', '20%']
-        ]
-      },
-      {
-        title: 'E. Other Involvement',
-        section_weight: '5%',
-        rows: [
-          ['ideas_platform', 'IDEAS Platform', '25%'],
-          ['any_social_media_platform', 'Any Social Media Platforms', '25%'],
-          ['ids_watch_column', 'IDS Watch Column', '25%'],
-          ['others', 'Others', '25%']
-        ]
-      }
-    ]
+    QUALITY_SECTIONS
   end
 
   def quantity_components
@@ -413,20 +455,8 @@ class KpiAssessmentsController < ApplicationController
   def update_quality_records!(quality_kpi, position)
     scoring = scoring_rules_for(position)
 
-    research_attrs = attributes_for(%w[
-      proposal_preparation proposal_presentation data_collection data_entry_and_cleaning
-      report_writing analysis_of_data presentation_of_findings
-    ])
-    financial_attrs = attributes_for(%w[budgeting record_keeping cashflow_management compliance])
-    soft_attrs = attributes_for(%w[writing_skill presentation_skill computer_skill management_skill statistical_knowledge])
-    hard_attrs = attributes_for(%w[communication_skill collaboration_teamwork problem_solving leadership attention_details])
-    other_attrs = attributes_for(%w[ideas_platform any_social_media_platform ids_watch_column others])
-
-    quality_kpi.research_work.update!(research_attrs.merge(total_score: research_attrs.values.sum))
-    quality_kpi.financial_management.update!(financial_attrs.merge(total_score: financial_attrs.values.sum))
-    quality_kpi.soft_skill.update!(soft_attrs.merge(total_score: soft_attrs.values.sum))
-    quality_kpi.hard_skill.update!(hard_attrs.merge(total_score: hard_attrs.values.sum))
-    quality_kpi.other_involvement.update!(other_attrs.merge(total_score: other_attrs.values.sum))
+    quality_attrs = quality_component_attributes
+    update_quality_component_records!(quality_kpi, quality_attrs)
 
     quality_kpi.update!(overall_total: compute_quality_overall_total(scoring))
   end
@@ -434,39 +464,50 @@ class KpiAssessmentsController < ApplicationController
   def create_quality_records!(quarter, position)
     scoring = scoring_rules_for(position)
 
-    research_attrs = attributes_for(%w[
-      proposal_preparation proposal_presentation data_collection data_entry_and_cleaning
-      report_writing analysis_of_data presentation_of_findings
-    ])
-    financial_attrs = attributes_for(%w[budgeting record_keeping cashflow_management compliance])
-    soft_attrs = attributes_for(%w[writing_skill presentation_skill computer_skill management_skill statistical_knowledge])
-    hard_attrs = attributes_for(%w[communication_skill collaboration_teamwork problem_solving leadership attention_details])
-    other_attrs = attributes_for(%w[ideas_platform any_social_media_platform ids_watch_column others])
-
-    research = ResearchWorkRelated.create!(research_attrs.merge(total_score: research_attrs.values.sum))
-    financial = FinancialManagement.create!(financial_attrs.merge(total_score: financial_attrs.values.sum))
-    soft = SoftSkill.create!(soft_attrs.merge(total_score: soft_attrs.values.sum))
-    hard = HardSkill.create!(hard_attrs.merge(total_score: hard_attrs.values.sum))
-    other = OtherInvolvement.create!(other_attrs.merge(total_score: other_attrs.values.sum))
-
-    overall_total = SECTION_FIELDS.sum do |section_code, fields|
-      full_sum = fields.sum { |field| scoring[:full_scores][field] }
-      next 0.to_d if full_sum.zero?
-
-      achieved_sum = fields.sum { |field| to_decimal(params[field]) }
-      raw_score = (achieved_sum / full_sum.to_d) * 100
-      raw_score * (scoring[:section_weights][section_code].to_d / 100)
-    end
+    quality_attrs = quality_component_attributes
+    components = create_quality_component_records!(quality_attrs)
 
     QualityBasedKpi.create!(
       quarter: quarter,
-      overall_total: overall_total.round(2),
-      research_work: research,
-      financial_management: financial,
-      soft_skill: soft,
-      hard_skill: hard,
-      other_involvement: other
+      overall_total: compute_quality_overall_total(scoring),
+      research_work: components[:research_work],
+      financial_management: components[:financial_management],
+      soft_skill: components[:soft_skill],
+      hard_skill: components[:hard_skill],
+      other_involvement: components[:other_involvement]
     )
+  end
+
+  def quality_component_attributes
+    {
+      research_work: attributes_for(RESEARCH_FIELDS),
+      financial_management: attributes_for(FINANCIAL_FIELDS),
+      soft_skill: attributes_for(SOFT_FIELDS),
+      hard_skill: attributes_for(HARD_FIELDS),
+      other_involvement: attributes_for(OTHER_FIELDS)
+    }
+  end
+
+  def update_quality_component_records!(quality_kpi, quality_attrs)
+    quality_kpi.research_work.update!(with_total_score(quality_attrs[:research_work]))
+    quality_kpi.financial_management.update!(with_total_score(quality_attrs[:financial_management]))
+    quality_kpi.soft_skill.update!(with_total_score(quality_attrs[:soft_skill]))
+    quality_kpi.hard_skill.update!(with_total_score(quality_attrs[:hard_skill]))
+    quality_kpi.other_involvement.update!(with_total_score(quality_attrs[:other_involvement]))
+  end
+
+  def create_quality_component_records!(quality_attrs)
+    {
+      research_work: ResearchWorkRelated.create!(with_total_score(quality_attrs[:research_work])),
+      financial_management: FinancialManagement.create!(with_total_score(quality_attrs[:financial_management])),
+      soft_skill: SoftSkill.create!(with_total_score(quality_attrs[:soft_skill])),
+      hard_skill: HardSkill.create!(with_total_score(quality_attrs[:hard_skill])),
+      other_involvement: OtherInvolvement.create!(with_total_score(quality_attrs[:other_involvement]))
+    }
+  end
+
+  def with_total_score(attributes)
+    attributes.merge(total_score: attributes.values.sum)
   end
 
   def create_quantity_records!(quarter)
@@ -517,6 +558,7 @@ class KpiAssessmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
   def scoring_rules_for(position)
     position_key = position.to_s.strip.downcase
     full_scores = DEFAULT_FULL_SCORES.dup
@@ -578,11 +620,13 @@ class KpiAssessmentsController < ApplicationController
 
     { full_scores: full_scores, section_weights: section_weights }
   end
+  # rubocop:enable Metrics/MethodLength
 
   def set_assessment
     @assessment = scoped_kpi_history.find(params[:id])
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def build_assessment_view_data
     @quarter = @assessment.quarters.order(created_at: :desc).first
     @quality_kpi = @quarter&.quality_based_kpi
@@ -591,18 +635,25 @@ class KpiAssessmentsController < ApplicationController
     scoring = scoring_rules_for(@assessment.position)
     @quality_view_sections = build_quality_sections_for_display(scoring)
     @quantity_view_rows = build_quantity_rows_for_display
-    @quality_overall_total = @quality_kpi&.overall_total&.to_d&.round(2) || @quality_view_sections.sum { |section| section[:weighted_score].to_d }.round(2)
-    @quantity_overall_total = @quantity_kpi&.overall_total&.to_d&.round(2) || @quantity_view_rows.sum { |row| row[:actual_score].to_d }.round(2)
+    @quality_overall_total =
+      @quality_kpi&.overall_total&.to_d&.round(2) ||
+      @quality_view_sections.sum { |section| section[:weighted_score].to_d }.round(2)
+    @quantity_overall_total =
+      @quantity_kpi&.overall_total&.to_d&.round(2) ||
+      @quantity_view_rows.sum { |row| row[:actual_score].to_d }.round(2)
     @reviewed_by = reviewed_by_label(@assessment)
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   def reviewed_by_label(assessment)
     reviewer_email = assessment.reviewer_email.to_s
     User.find_by(email: reviewer_email)&.name.presence || reviewer_email
   end
 
+  # rubocop:disable Metrics/AbcSize
   def ensure_assessment_records_for_update!
-    @quarter = @assessment.quarters.order(created_at: :desc).first || @assessment.quarters.create!(quarter_name: current_quarter_name)
+    @quarter = @assessment.quarters.order(created_at: :desc).first
+    @quarter ||= @assessment.quarters.create!(quarter_name: current_quarter_name)
 
     @quality_kpi = @quarter.quality_based_kpi
     if @quality_kpi.nil?
@@ -624,15 +675,16 @@ class KpiAssessmentsController < ApplicationController
     end
 
     @quantity_kpi = @quarter.quantity_based_kpi
-    if @quantity_kpi.nil?
-      output = OutputAndImpactBased.create!(zero_attributes_for(QUANTITY_SCORE_FIELDS).merge(total_score: 0))
-      @quantity_kpi = QuantityBasedKpi.create!(
-        quarter: @quarter,
-        output_and_impact_based: output,
-        overall_total: 0
-      )
-    end
+    return unless @quantity_kpi.nil?
+
+    output = OutputAndImpactBased.create!(zero_attributes_for(QUANTITY_SCORE_FIELDS).merge(total_score: 0))
+    @quantity_kpi = QuantityBasedKpi.create!(
+      quarter: @quarter,
+      output_and_impact_based: output,
+      overall_total: 0
+    )
   end
+  # rubocop:enable Metrics/AbcSize
 
   def zero_attributes_for(fields)
     fields.index_with { 0.to_d }
@@ -684,6 +736,7 @@ class KpiAssessmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def quality_value_map
     return {} unless @quality_kpi
 
@@ -715,7 +768,9 @@ class KpiAssessmentsController < ApplicationController
       'others' => @quality_kpi.other_involvement.others
     }
   end
+  # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def destroy_assessment_tree!(assessment)
     assessment.quarters.find_each do |quarter|
       quality = quarter.quality_based_kpi
@@ -748,6 +803,7 @@ class KpiAssessmentsController < ApplicationController
 
     assessment.destroy!
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   def scoped_kpi_history
     return KpiAssessment.all if current_user.superadmin?
@@ -755,3 +811,4 @@ class KpiAssessmentsController < ApplicationController
     KpiAssessment.where(reviewer_email: current_user.email)
   end
 end
+# rubocop:enable Metrics/ClassLength
