@@ -1,0 +1,126 @@
+<div id="kpi_assessments" class="kpi-assessment-page" data-controller="kpi-assessment-form">
+  <div class="kpi-panel-title">KPI Assessment &gt; Add KPI Assessment</div>
+
+  <div class="kpi-back-link-wrap">
+    <%= link_to kpi_assessments_path, class: "kpi-back-link" do %>
+      <i class="bi bi-arrow-left me-2"></i>Back to KPI Assessment
+    <% end %>
+  </div>
+
+  <div class="kpi-info-banner" data-kpi-assessment-form-target="infoBanner">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    Select an IDS Staff Member to review for KPI Assessment
+    <button class="btn-close ms-auto" type="button" aria-label="Close" data-action="click->kpi-assessment-form#closeInfoBanner"></button>
+  </div>
+
+  <%= form_with url: step2_kpi_assessments_path, method: :get, local: true, class: "kpi-form" do %>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label fw-semibold" for="staff_profile_id">Staff Name</label>
+        <select id="staff_profile_id"
+                name="staff_profile_id"
+                class="form-select"
+                required
+                data-kpi-assessment-form-target="staffSelect"
+                data-action="change->kpi-assessment-form#staffChanged">
+          <option value="">Select IDS Staff</option>
+          <% @staff_profiles.each do |staff| %>
+            <option value="<%= staff.staff_profile_id %>"
+                    <%= "selected" if @selected_staff_id.to_s == staff.staff_profile_id.to_s %>
+                    data-position="<%= staff.position %>"
+                    data-reviewer="<%= staff.supervisor_name %>">
+              <%= staff.fullname %>
+            </option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-semibold" for="kpi_position">Position</label>
+        <input id="kpi_position"
+               type="text"
+               class="form-control"
+               placeholder="Position"
+               readonly
+               data-kpi-assessment-form-target="positionField">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-semibold" for="reviewed_by">Reviewed By</label>
+        <input id="reviewed_by"
+               name="reviewed_by"
+               type="text"
+               class="form-control"
+               placeholder="Reviewer"
+           value="<%= @reviewed_by %>"
+               readonly
+               data-kpi-assessment-form-target="reviewedByField">
+      </div>
+    </div>
+
+    <div class="kpi-score-shell d-none" data-kpi-assessment-form-target="qualitySection">
+      <div class="kpi-score-header-row">
+        <h2>Proposed Scoring For Researches Based On Their Position</h2>
+      </div>
+
+      <div class="kpi-mode-header-row">
+        <div class="kpi-mode-pills">
+          <span class="mode-pill active">Quality-Based</span>
+          <span class="mode-pill">Quantity-Based</span>
+        </div>
+
+        <div class="kpi-overall-score">Overall Total(%) : <span>---</span> / 100</div>
+      </div>
+
+      <% @quality_sections.each do |section| %>
+        <div class="kpi-section-block" data-section-code="<%= section[:title].split('.').first %>">
+          <div class="kpi-section-title">
+            <span><%= section[:title] %></span>
+            <i class="bi bi-chevron-up"></i>
+          </div>
+
+          <table class="table kpi-score-table mb-0">
+            <thead>
+              <tr>
+                <th>Component of Assessment</th>
+                <th class="text-center">Full Score (%)</th>
+                <th class="text-center">Actual Score (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% section[:rows].each do |row| %>
+                <tr>
+                  <td><%= row[1] %></td>
+                  <td class="text-center full-score-cell" data-default-full-score="<%= row[2] %>"><%= row[2] %></td>
+                  <td>
+                    <input type="number"
+                           name="<%= row[0] %>"
+                           class="form-control score-input"
+                           placeholder="Enter Actual Score"
+                           data-default-placeholder="Enter Actual Score"
+                            value="<%= @quality_input_values[row[0]] %>"
+                           min="0"
+                           max="100"
+                           step="0.01"
+                           required>
+                  </td>
+                </tr>
+              <% end %>
+              <tr class="kpi-weight-row">
+                <td>Weightage and Score</td>
+                <td class="text-center section-weight-cell" data-default-section-weight="<%= section[:section_weight] %>"><%= section[:section_weight] %></td>
+                <td class="text-center section-score-cell">-%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
+      <div class="kpi-step-actions">
+        <button class="btn btn-kpi-next" type="submit">
+          Next <i class="bi bi-arrow-right-short ms-1"></i>
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>

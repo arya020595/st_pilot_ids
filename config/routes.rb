@@ -31,7 +31,12 @@ Rails.application.routes.draw do
   resources :psychometric_assessments, only: %i[index]
 
   # KPI Assessment
-  resources :kpi_assessments, only: %i[index]
+  resources :kpi_assessments, only: %i[index new show edit update destroy] do
+    collection do
+      get :step2
+      post :submit_preview
+    end
+  end
 
   # Master Data Namespace
   namespace :master_data do
