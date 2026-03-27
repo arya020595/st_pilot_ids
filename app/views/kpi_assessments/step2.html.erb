@@ -1,0 +1,108 @@
+<div id="kpi_assessments" class="kpi-assessment-page" data-controller="kpi-quantity-form">
+  <div class="kpi-panel-title">KPI Assessment &gt; Add KPI Assessment</div>
+
+  <div class="kpi-back-link-wrap">
+    <%= link_to new_kpi_assessment_path({ staff_profile_id: @selected_staff_id, reviewed_by: @reviewed_by }.merge(@quality_input_values.compact)), class: "kpi-back-link" do %>
+      <i class="bi bi-arrow-left me-2"></i>Back to KPI Assessment
+    <% end %>
+  </div>
+
+  <%= form_with url: submit_preview_kpi_assessments_path, method: :post, local: true, class: "kpi-form" do %>
+    <%= hidden_field_tag :staff_profile_id, @selected_staff_id %>
+    <%= hidden_field_tag :reviewed_by, @reviewed_by %>
+    <% @quality_input_values.each do |field, value| %>
+      <%= hidden_field_tag field, value %>
+    <% end %>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Staff Name</label>
+        <input type="text"
+               class="form-control"
+               value="<%= @selected_staff&.fullname %>"
+               readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Position</label>
+        <input type="text"
+               class="form-control"
+               value="<%= @selected_staff&.position %>"
+               readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Reviewed By</label>
+        <input type="text"
+               class="form-control"
+               value="<%= @reviewed_by %>"
+               readonly>
+      </div>
+    </div>
+
+    <div class="kpi-score-shell mt-4">
+      <div class="kpi-score-header-row">
+        <h2>Proposed Scoring For Researches Based On Their Position</h2>
+      </div>
+
+      <div class="kpi-mode-header-row">
+        <div class="kpi-mode-pills">
+          <span class="mode-pill disabled">Quality-Based</span>
+          <span class="mode-pill active">Quantity-Based</span>
+        </div>
+
+        <div class="kpi-overall-score">Overall Total(%) : <span>---</span> / 100</div>
+      </div>
+
+      <div class="kpi-section-block">
+        <div class="kpi-section-title">
+          <span>Output and Impact Based</span>
+          <i class="bi bi-chevron-up"></i>
+        </div>
+
+        <table class="table kpi-score-table mb-0">
+          <thead>
+            <tr>
+              <th>Component of Assessment</th>
+              <th class="text-center">Full Score (%)</th>
+              <th class="text-center">Actual Score (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @quantity_components.each do |component| %>
+              <tr>
+                <td><%= component[1] %></td>
+                <td class="text-center"><%= component[2] %></td>
+                <td>
+                  <input type="number"
+                         name="<%= component[0] %>"
+                         class="form-control score-input"
+                         data-action="input->kpi-quantity-form#scoreChanged"
+                         placeholder="Enter Actual Score"
+                         min="0"
+                         max="<%= component[2].delete('%') %>"
+                         value="<%= params[component[0]] %>"
+                         step="0.01"
+                         required>
+                </td>
+              </tr>
+            <% end %>
+            <tr class="kpi-weight-row">
+              <td>Weightage and Score</td>
+              <td class="text-center">100%</td>
+              <td class="text-center" data-kpi-quantity-form-target="sectionScore">-%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="kpi-step-actions split">
+        <%= link_to new_kpi_assessment_path({ staff_profile_id: @selected_staff_id, reviewed_by: @reviewed_by }.merge(@quality_input_values.compact)), class: "btn btn-kpi-prev" do %>
+          <i class="bi bi-arrow-left-short me-1"></i>Previous
+        <% end %>
+
+        <button class="btn btn-kpi-next" type="submit">Submit <i class="bi bi-arrow-right-short ms-1"></i></button>
+      </div>
+    </div>
+  <% end %>
+</div>

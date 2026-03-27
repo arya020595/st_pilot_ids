@@ -1,8 +1,19 @@
 <div class="container-fluid px-4 py-4">
-  <h1 class="mb-4">Psychometric Assessment</h1>
-  <div class="card">
-    <div class="card-body">
-      <p class="text-muted mb-0">Psychometric Assessment module is under development.</p>
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header app-page-title mb-0 border-0">
+      Psychometric Assessment
+    </div>
+    <div class="card-body py-4">
+      <p class="mb-2 fs-5 fw-semibold text-secondary">
+        To view psychometric assessment details, kindly click the Google Drive link below:
+      </p>
+
+      <% if current_user.superadmin? %>
+      <% elsif @psychometric_assessment.drive_url_for(current_user).present? %>
+        <%= link_to 'Google Drive Link', @psychometric_assessment.drive_url_for(current_user), target: '_blank', rel: 'noopener', class: 'fw-bold fs-4' %>
+      <% else %>
+        <p class="text-muted mb-0">No Google Drive link is available for your account yet.</p>
+      <% end %>
     </div>
   </div>
 </div>

@@ -3,14 +3,6 @@
     <!-- Logo / Title -->
   </a>
   <ul id="sidebarAccordion" class="nav nav-pills flex-column mb-auto">
-    <!-- Dashboard -->
-    <% if can_view_menu?('dashboard.index') %>
-      <li class="nav-item">
-        <%= link_to root_path, class: "nav-link #{active_nav_item?(root_path) ? 'active' : 'link-dark'}" do %>
-          <i class="bi bi-speedometer2 me-2"></i> Dashboard
-        <% end %>
-      </li>
-    <% end %>
     <!-- BI Dashboard -->
     <% if can_view_menu?('bi_dashboards.index') %>
       <li class="nav-item">

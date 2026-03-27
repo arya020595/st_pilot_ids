@@ -1,8 +1,70 @@
-<div class="container-fluid px-4 py-4">
-  <h1 class="mb-4">KPI Assessment</h1>
-  <div class="card">
-    <div class="card-body">
-      <p class="text-muted mb-0">KPI Assessment module is under development.</p>
+<div id="kpi_assessments">
+  <div class="kpi-assessment-page">
+    <div class="kpi-panel-title">KPI Assessment</div>
+
+    <div class="kpi-actions">
+      <%= link_to new_kpi_assessment_path, class: "btn add-kpi-btn" do %>
+        <i class="bi bi-plus-circle-fill me-2"></i>Add KPI Assessment
+      <% end %>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table kpi-table">
+        <thead>
+          <tr>
+            <th class="action-col"></th>
+            <th>IDS Staff ID</th>
+            <th>Full Name</th>
+            <th>Reviewed At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @staff_rows.any? %>
+            <% @staff_rows.each do |staff| %>
+              <tr>
+                <td class="action-icons">
+                  <%= link_to kpi_assessment_path(staff), class: "icon-link info", aria: { label: "Info" } do %>
+                    <i class="bi bi-info-circle-fill"></i>
+                  <% end %>
+                  <%= link_to edit_kpi_assessment_path(staff), class: "icon-link edit", aria: { label: "Edit" } do %>
+                    <i class="bi bi-pencil-fill"></i>
+                  <% end %>
+                  <%= link_to kpi_assessment_path(staff),
+                              class: "icon-link delete",
+                              data: { turbo_method: :delete, turbo_confirm: "Delete this KPI assessment?" },
+                              aria: { label: "Delete" } do %>
+                    <i class="bi bi-trash-fill"></i>
+                  <% end %>
+                </td>
+                <td><%= "STF_#{staff.staff_profile_id.to_s.rjust(3, '0')}" %></td>
+                <td><%= staff.fullname %></td>
+                <td><%= staff.updated_at&.strftime('%d-%m-%Y %l:%M %p') || '-' %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="4" class="empty-state">No assessment records yet.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kpi-table-footer">
+      <div class="left-group">
+        <span>Show</span>
+        <select class="form-select form-select-sm per-page-select" disabled>
+          <option>10</option>
+        </select>
+        <span>entries</span>
+        <span class="table-status">Showing 0 to 0 out of 0 entries</span>
+      </div>
+
+      <div class="pagination-preview" aria-label="Pagination preview">
+        <span class="page-item disabled">&laquo; Previous</span>
+        <span class="page-item active">1</span>
+        <span class="page-item disabled">Next &raquo;</span>
+      </div>
     </div>
   </div>
 </div>

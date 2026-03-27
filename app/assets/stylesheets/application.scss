@@ -1,15 +1,28 @@
 @use "bootstrap";
 @use "dashboard";
 @use "staff_profile";
+@use "kpi_assessment";
 @use "login";
 @use "sidebar";
 @use "breadcrumb";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
-* {
-  font-family: "Nunito", sans-serif;
-  color: #000000;
+.app-page-title {
+  background-color: #1f5385;
+  color: #ffffff !important;
+  padding: 12px 16px;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  line-height: 1.2;
 }
+
+.app-page-title * {
+  color: #ffffff !important;
+}
+
+
 
 // Collapsed sidebar
 .sidebar-collapsed {
