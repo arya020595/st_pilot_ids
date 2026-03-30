@@ -21,6 +21,8 @@ on:
 jobs:
   rollback:
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -71,11 +73,12 @@ jobs:
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           MIGRATION_STEPS: ${{ github.event.inputs.rollback_migrations }}
           SKIP_HEALTH_CHECK: ${{ github.event.inputs.skip_health_check }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          envs: IMAGE_TAG,MIGRATION_STEPS,SKIP_HEALTH_CHECK
+          envs: IMAGE_TAG,MIGRATION_STEPS,SKIP_HEALTH_CHECK,GHCR_TOKEN
           script: |
             set -e
 
@@ -85,6 +88,10 @@ jobs:
             APP_NAME="st_pilot_ids"
             APP_PATH="/home/stadmin/${APP_NAME}"
             IMAGE="ghcr.io/${{ github.repository }}"
+
+            # Authenticate with GHCR before pulling
+            echo "→ Authenticating with GitHub Container Registry..."
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
             # Verify image exists
             echo "→ Verifying image exists: ${IMAGE}:${IMAGE_TAG}"
