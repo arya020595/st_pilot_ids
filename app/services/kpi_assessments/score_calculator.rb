@@ -13,22 +13,17 @@ module KpiAssessments
       @scoring_rules = build_scoring_rules
     end
 
-    def full_scores
-      @scoring_rules[:full_scores]
-    end
-
-    def section_weights
-      @scoring_rules[:section_weights]
-    end
-
     def compute_quality_overall_total(score_form)
+      scores = @scoring_rules[:full_scores]
+      weights = @scoring_rules[:section_weights]
+
       SECTION_FIELDS.sum do |section_code, fields|
-        full_sum = fields.sum { |field| full_scores[field] }
+        full_sum = fields.sum { |field| scores[field] }
         next 0.to_d if full_sum.zero?
 
         achieved_sum = fields.sum { |field| score_form.score_value(field) }
         raw_score = (achieved_sum / full_sum.to_d) * 100
-        raw_score * (section_weights[section_code].to_d / 100)
+        raw_score * (weights[section_code].to_d / 100)
       end.round(2)
     end
 

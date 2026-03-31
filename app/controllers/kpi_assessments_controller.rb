@@ -2,17 +2,14 @@
 
 # Thin controller for KPI Assessment — delegates to services, forms, presenters, and Pundit policy scopes.
 class KpiAssessmentsController < ApplicationController
+  before_action -> { authorize :kpi_assessment, :index? }
   before_action :set_assessment, only: %i[show edit update destroy]
 
   def index
-    authorize :kpi_assessment, :index?
-
     @staff_rows = policy_scope(KpiAssessment).order(updated_at: :desc)
   end
 
   def new
-    authorize :kpi_assessment, :index?
-
     @staff_profiles = assessable_staff_profiles.order(:fullname)
     @quality_sections = KpiScoring::QUALITY_SECTIONS
     @selected_staff_id = score_form.staff_profile_id
@@ -21,8 +18,6 @@ class KpiAssessmentsController < ApplicationController
   end
 
   def step2
-    authorize :kpi_assessment, :index?
-
     @quantity_components = KpiScoring::QUANTITY_COMPONENTS
     @selected_staff_id = score_form.staff_profile_id
     @selected_staff = find_assessable_staff(@selected_staff_id)
@@ -42,20 +37,14 @@ class KpiAssessmentsController < ApplicationController
   end
 
   def show
-    authorize :kpi_assessment, :index?
-
     load_presenter_data
   end
 
   def edit
-    authorize :kpi_assessment, :index?
-
     load_presenter_data
   end
 
   def update
-    authorize :kpi_assessment, :index?
-
     if score_form.missing_quality_fields(@assessment.position).any? ||
        score_form.missing_quantity_fields.any?
       load_presenter_data
@@ -73,15 +62,11 @@ class KpiAssessmentsController < ApplicationController
   end
 
   def destroy
-    authorize :kpi_assessment, :index?
-
     KpiAssessments::DestroyService.new(@assessment).call
     redirect_to kpi_assessments_path, notice: 'KPI assessment deleted successfully.'
   end
 
   def submit_preview
-    authorize :kpi_assessment, :index?
-
     @selected_staff = find_assessable_staff(score_form.staff_profile_id)
 
     if @selected_staff.blank?
@@ -129,9 +114,7 @@ class KpiAssessmentsController < ApplicationController
   end
 
   def find_assessable_staff(staff_profile_id)
-    return nil if staff_profile_id.blank?
-
-    assessable_staff_profiles.find_by(staff_profile_id: staff_profile_id)
+    assessable_staff_profiles.find_by(staff_profile_id: staff_profile_id) if staff_profile_id.present?
   end
 
   def load_presenter_data

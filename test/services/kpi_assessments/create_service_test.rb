@@ -54,7 +54,7 @@ module KpiAssessments
       ).call
 
       quality = assessment.quarters.first.quality_based_kpi
-      assert quality.overall_total.to_d > 0
+      assert quality.overall_total.to_d.positive?
     end
 
     test 'computes quantity overall total' do

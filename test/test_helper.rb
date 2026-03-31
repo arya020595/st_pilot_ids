@@ -16,6 +16,4 @@ module ActiveSupport
   end
 end
 
-class ActionDispatch::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-end
+ActionDispatch::IntegrationTest.include Devise::Test::IntegrationHelpers

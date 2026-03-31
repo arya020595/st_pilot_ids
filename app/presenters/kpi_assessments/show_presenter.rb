@@ -42,6 +42,14 @@ module KpiAssessments
       end
     end
 
+    COMPONENT_ASSOCIATIONS = {
+      research_work: RESEARCH_FIELDS,
+      financial_management: FINANCIAL_FIELDS,
+      soft_skill: SOFT_FIELDS,
+      hard_skill: HARD_FIELDS,
+      other_involvement: OTHER_FIELDS
+    }.freeze
+
     private
 
     def build_quality_sections
@@ -93,33 +101,10 @@ module KpiAssessments
     def quality_value_map
       return {} unless @quality_kpi
 
-      {
-        'proposal_preparation' => @quality_kpi.research_work.proposal_preparation,
-        'proposal_presentation' => @quality_kpi.research_work.proposal_presentation,
-        'data_collection' => @quality_kpi.research_work.data_collection,
-        'data_entry_and_cleaning' => @quality_kpi.research_work.data_entry_and_cleaning,
-        'report_writing' => @quality_kpi.research_work.report_writing,
-        'analysis_of_data' => @quality_kpi.research_work.analysis_of_data,
-        'presentation_of_findings' => @quality_kpi.research_work.presentation_of_findings,
-        'budgeting' => @quality_kpi.financial_management.budgeting,
-        'record_keeping' => @quality_kpi.financial_management.record_keeping,
-        'cashflow_management' => @quality_kpi.financial_management.cashflow_management,
-        'compliance' => @quality_kpi.financial_management.compliance,
-        'writing_skill' => @quality_kpi.soft_skill.writing_skill,
-        'presentation_skill' => @quality_kpi.soft_skill.presentation_skill,
-        'computer_skill' => @quality_kpi.soft_skill.computer_skill,
-        'management_skill' => @quality_kpi.soft_skill.management_skill,
-        'statistical_knowledge' => @quality_kpi.soft_skill.statistical_knowledge,
-        'communication_skill' => @quality_kpi.hard_skill.communication_skill,
-        'collaboration_teamwork' => @quality_kpi.hard_skill.collaboration_teamwork,
-        'problem_solving' => @quality_kpi.hard_skill.problem_solving,
-        'leadership' => @quality_kpi.hard_skill.leadership,
-        'attention_details' => @quality_kpi.hard_skill.attention_details,
-        'ideas_platform' => @quality_kpi.other_involvement.ideas_platform,
-        'any_social_media_platform' => @quality_kpi.other_involvement.any_social_media_platform,
-        'ids_watch_column' => @quality_kpi.other_involvement.ids_watch_column,
-        'others' => @quality_kpi.other_involvement.others
-      }
+      COMPONENT_ASSOCIATIONS.each_with_object({}) do |(assoc, fields), map|
+        component = @quality_kpi.public_send(assoc)
+        fields.each { |field| map[field] = component.public_send(field) }
+      end
     end
   end
 end
