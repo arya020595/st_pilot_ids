@@ -1,0 +1,8 @@
+superadmin:
+  name: superadmin
+
+supervisor:
+  name: supervisor
+
+staff:
+  name: staff
