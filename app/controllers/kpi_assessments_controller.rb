@@ -403,6 +403,7 @@ class KpiAssessmentsController < ApplicationController
 
   def available_staff_profiles
     return StaffProfile.all if current_user.superadmin?
+    return StaffProfile.all if current_user.role&.name == 'supervisor'
 
     supervisor_name = current_user.name.to_s.strip.downcase
     staff_names = SUPERVISOR_STAFF_MAP.fetch(supervisor_name, [])
