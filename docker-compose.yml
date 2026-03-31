@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: st_pilot_ids_development
     ports:
-      - "5432:5432"
+      - "${DATABASE_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -38,7 +38,7 @@ services:
       # Ensure Puppeteer/Grover uses system Chromium executable
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium
     ports:
-      - "3000:3000"
+      - "${APP_PORT:-3000}:3000"
     volumes:
       # Mount source code for live reloading
       - .:/rails
