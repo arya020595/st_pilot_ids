@@ -1,0 +1,7 @@
+kpi_index:
+  code: kpi_assessments.index
+  name: KPI Assessment Index
+
+dashboard_index:
+  code: dashboard.index
+  name: Dashboard Index
