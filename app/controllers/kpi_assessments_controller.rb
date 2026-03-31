@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Thin controller for KPI Assessment — delegates to services, forms, presenters, and Pundit policy scopes.
-class KpiAssessmentsController < ApplicationController
+class KpiAssessmentsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :set_assessment, only: %i[show edit update destroy]
 
   def index

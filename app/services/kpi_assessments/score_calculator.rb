@@ -3,7 +3,7 @@
 module KpiAssessments
   # Position-based scoring rules and weighted total computation.
   # Follows Open/Closed Principle: add new positions without modifying existing logic.
-  class ScoreCalculator
+  class ScoreCalculator # rubocop:disable Metrics/ClassLength
     include KpiScoring
 
     attr_reader :scoring_rules

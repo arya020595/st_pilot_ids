@@ -2,7 +2,7 @@
 
 # Domain configuration for KPI scoring: field definitions, section structure,
 # default scores, weights, and position-based rules.
-module KpiScoring
+module KpiScoring # rubocop:disable Metrics/ModuleLength
   QUALITY_SCORE_FIELDS = %w[
     proposal_preparation
     proposal_presentation

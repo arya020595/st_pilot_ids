@@ -51,7 +51,9 @@ module KpiAssessments
 
     def create_blank_quality!
       research = ResearchWorkRelated.create!(@calculator.zero_attributes_for(SECTION_FIELDS['A']).merge(total_score: 0))
-      financial = FinancialManagement.create!(@calculator.zero_attributes_for(SECTION_FIELDS['B']).merge(total_score: 0))
+      financial = FinancialManagement.create!(
+        @calculator.zero_attributes_for(SECTION_FIELDS['B']).merge(total_score: 0)
+      )
       soft = SoftSkill.create!(@calculator.zero_attributes_for(SECTION_FIELDS['C']).merge(total_score: 0))
       hard = HardSkill.create!(@calculator.zero_attributes_for(SECTION_FIELDS['D']).merge(total_score: 0))
       other = OtherInvolvement.create!(@calculator.zero_attributes_for(SECTION_FIELDS['E']).merge(total_score: 0))
@@ -68,7 +70,9 @@ module KpiAssessments
     end
 
     def create_blank_quantity!
-      output = OutputAndImpactBased.create!(@calculator.zero_attributes_for(QUANTITY_SCORE_FIELDS).merge(total_score: 0))
+      output = OutputAndImpactBased.create!(
+        @calculator.zero_attributes_for(QUANTITY_SCORE_FIELDS).merge(total_score: 0)
+      )
       QuantityBasedKpi.create!(
         quarter: @quarter,
         output_and_impact_based: output,

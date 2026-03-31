@@ -126,3 +126,11 @@ Metrics/AbcSize:
     - "lib/tasks/**/*"
     - "db/seeds/**/*"
     - "test/**/*"
+
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+
+Style/OneClassPerFile:
+  Exclude:
+    - "test/test_helper.rb"
