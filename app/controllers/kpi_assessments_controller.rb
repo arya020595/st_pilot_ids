@@ -40,6 +40,45 @@ class KpiAssessmentsController < ApplicationController
     presentation_national_level
   ].freeze
 
+  QUANTITY_COMPONENTS = [
+    {
+      field: 'number_of_involvement',
+      label: 'Number of Involvement',
+      weight_percent: 20,
+      max_input_percent: 7
+    },
+    {
+      field: 'output_production',
+      label: 'Output Production',
+      weight_percent: 30,
+      max_input_percent: 4
+    },
+    {
+      field: 'acceptance_of_outputs',
+      label: 'Acceptance of Outputs',
+      weight_percent: 15,
+      max_input_percent: 4
+    },
+    {
+      field: 'uptake_of_outputs',
+      label: 'Uptake of Outputs',
+      weight_percent: 10,
+      max_input_percent: 2
+    },
+    {
+      field: 'presentation_state_level',
+      label: 'Presentation (State - Level)',
+      weight_percent: 10,
+      max_input_percent: 5
+    },
+    {
+      field: 'presentation_national_level',
+      label: 'Presentation (National - Level)',
+      weight_percent: 15,
+      max_input_percent: 3
+    }
+  ].freeze
+
   # Position-based Step 1 scope. Keep as allow-list so future roles can be added safely.
   QUALITY_ALLOWED_FIELDS_BY_POSITION = {
     'research assistant' => %w[
@@ -246,19 +285,21 @@ class KpiAssessmentsController < ApplicationController
     authorize :kpi_assessment, :index?
 
     @staff_profiles = available_staff_profiles.order(:fullname)
-    @quality_sections = quality_sections
+    @quantity_components = quantity_components
     @selected_staff_id = params[:staff_profile_id].presence
-    @reviewed_by = params[:reviewed_by].presence
-    @quality_input_values = quality_input_values_from_params
+    @selected_staff = find_selected_staff(@selected_staff_id)
+    @reviewed_by = reviewer_display_name
+    @quantity_input_values = quantity_input_values_from_params
   end
 
   def step2
     authorize :kpi_assessment, :index?
 
-    @quantity_components = quantity_components
+    @quality_sections = quality_sections
     @selected_staff_id = params[:staff_profile_id].presence
     @selected_staff = find_selected_staff(@selected_staff_id)
-    @reviewed_by = params[:reviewed_by].presence || @selected_staff&.supervisor_name
+    @reviewed_by = reviewer_display_name
+    @quantity_input_values = quantity_input_values_from_params
     @quality_input_values = quality_input_values_from_params
 
     if @selected_staff.blank?
@@ -267,10 +308,10 @@ class KpiAssessmentsController < ApplicationController
       return
     end
 
-    return unless missing_quality_score_fields.any? || @selected_staff_id.blank?
+    return unless missing_quantity_score_fields.any? || @selected_staff_id.blank?
 
-    redirect_to new_kpi_assessment_path(previous_step_params),
-                alert: 'Please fill in all quality-based scores before continuing.'
+    redirect_to new_kpi_assessment_path(quantity_step_params),
+                alert: 'Please fill in all quantity-based scores before continuing.'
   end
 
   def show
@@ -300,10 +341,20 @@ class KpiAssessmentsController < ApplicationController
       return
     end
 
+    if quantity_scores_out_of_range_fields.any?
+      build_assessment_view_data
+      flash.now[:alert] = quantity_out_of_range_message
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
     ActiveRecord::Base.transaction do
-      update_quality_records!(@quality_kpi, @assessment.position)
-      update_quantity_records!(@quantity_kpi)
-      @assessment.touch
+      quality_total = update_quality_records!(@quality_kpi, @assessment.position)
+      quantity_total = update_quantity_records!(@quantity_kpi)
+      @assessment.update!(
+        quality_based_total: quality_total,
+        quantity_based_total: quantity_total
+      )
     end
 
     redirect_to kpi_assessment_path(@assessment), notice: 'KPI assessment updated successfully.'
@@ -332,15 +383,21 @@ class KpiAssessmentsController < ApplicationController
       return
     end
 
-    if missing_quality_score_fields.any?
-      redirect_to new_kpi_assessment_path(previous_step_params),
-                  alert: 'Please fill in all quality-based scores before continuing.'
+    if missing_quantity_score_fields.any?
+      redirect_to new_kpi_assessment_path(quantity_step_params),
+                  alert: 'Please fill in all quantity-based scores before continuing.'
       return
     end
 
-    if missing_quantity_score_fields.any?
-      redirect_to step2_kpi_assessments_path(request.request_parameters),
-                  alert: 'Please fill in all quantity-based scores before submitting.'
+    if quantity_scores_out_of_range_fields.any?
+      redirect_to new_kpi_assessment_path(quantity_step_params),
+                  alert: quantity_out_of_range_message
+      return
+    end
+
+    if missing_quality_score_fields.any?
+      redirect_to step2_kpi_assessments_path(quality_step_params),
+                  alert: 'Please fill in all quality-based scores before submitting.'
       return
     end
 
@@ -388,11 +445,23 @@ class KpiAssessmentsController < ApplicationController
     QUALITY_SCORE_FIELDS.index_with { |field| params[field].presence }
   end
 
-  def previous_step_params
+  def quantity_input_values_from_params
+    QUANTITY_SCORE_FIELDS.index_with { |field| params[field].presence }
+  end
+
+  def quantity_step_params
     {
       staff_profile_id: @selected_staff_id,
-      reviewed_by: @reviewed_by || @selected_staff&.supervisor_name
-    }.merge(quality_input_values_from_params.compact)
+      reviewed_by: reviewer_display_name
+    }.merge(quantity_input_values_from_params.compact)
+  end
+
+  def reviewer_display_name
+    current_user.name.presence || current_user.email
+  end
+
+  def quality_step_params
+    quantity_step_params.merge(quality_input_values_from_params.compact)
   end
 
   def find_selected_staff(staff_profile_id)
@@ -401,6 +470,7 @@ class KpiAssessmentsController < ApplicationController
     available_staff_profiles.find_by(staff_profile_id: staff_profile_id)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def available_staff_profiles
     return StaffProfile.all if current_user.superadmin?
     return StaffProfile.all if current_user.role&.name == 'supervisor'
@@ -418,6 +488,7 @@ class KpiAssessmentsController < ApplicationController
 
     scoped_profiles.where(staff_profile_id: allowed_ids)
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def normalize_name_key(value)
     value.to_s.downcase.gsub(/[^a-z0-9]/, '')
@@ -428,14 +499,7 @@ class KpiAssessmentsController < ApplicationController
   end
 
   def quantity_components
-    [
-      ['number_of_involvement', 'Number of Involvement', '20%'],
-      ['output_production', 'Output Production', '30%'],
-      ['acceptance_of_outputs', 'Acceptance of Outputs', '15%'],
-      ['uptake_of_outputs', 'Uptake of Outputs', '10%'],
-      ['presentation_state_level', 'Presentation (State - Level)', '10%'],
-      ['presentation_national_level', 'Presentation (National - Level)', '15%']
-    ]
+    QUANTITY_COMPONENTS
   end
 
   def create_assessment_records!(staff_profile)
@@ -449,8 +513,13 @@ class KpiAssessmentsController < ApplicationController
     )
 
     quarter = assessment.quarters.create!(quarter_name: current_quarter_name)
-    create_quality_records!(quarter, staff_profile.position)
-    create_quantity_records!(quarter)
+    quality_total = create_quality_records!(quarter, staff_profile.position)
+    quantity_total = create_quantity_records!(quarter)
+
+    assessment.update!(
+      quality_based_total: quality_total,
+      quantity_based_total: quantity_total
+    )
   end
 
   def update_quality_records!(quality_kpi, position)
@@ -459,7 +528,9 @@ class KpiAssessmentsController < ApplicationController
     quality_attrs = quality_component_attributes
     update_quality_component_records!(quality_kpi, quality_attrs)
 
-    quality_kpi.update!(overall_total: compute_quality_overall_total(scoring))
+    overall_total = compute_quality_overall_total(scoring)
+    quality_kpi.update!(overall_total: overall_total)
+    overall_total
   end
 
   def create_quality_records!(quarter, position)
@@ -467,16 +538,19 @@ class KpiAssessmentsController < ApplicationController
 
     quality_attrs = quality_component_attributes
     components = create_quality_component_records!(quality_attrs)
+    overall_total = compute_quality_overall_total(scoring)
 
     QualityBasedKpi.create!(
       quarter: quarter,
-      overall_total: compute_quality_overall_total(scoring),
+      overall_total: overall_total,
       research_work: components[:research_work],
       financial_management: components[:financial_management],
       soft_skill: components[:soft_skill],
       hard_skill: components[:hard_skill],
       other_involvement: components[:other_involvement]
     )
+
+    overall_total
   end
 
   def quality_component_attributes
@@ -514,21 +588,37 @@ class KpiAssessmentsController < ApplicationController
   def create_quantity_records!(quarter)
     output_attrs = attributes_for(QUANTITY_SCORE_FIELDS)
     output_total = output_attrs.values.sum
+    weighted_total = compute_quantity_overall_total(output_attrs)
     output_and_impact = OutputAndImpactBased.create!(output_attrs.merge(total_score: output_total))
 
     QuantityBasedKpi.create!(
       quarter: quarter,
       output_and_impact_based: output_and_impact,
-      overall_total: output_total
+      overall_total: weighted_total
     )
+
+    weighted_total
   end
 
   def update_quantity_records!(quantity_kpi)
     output_attrs = attributes_for(QUANTITY_SCORE_FIELDS)
     output_total = output_attrs.values.sum
+    weighted_total = compute_quantity_overall_total(output_attrs)
 
     quantity_kpi.output_and_impact_based.update!(output_attrs.merge(total_score: output_total))
-    quantity_kpi.update!(overall_total: output_total)
+    quantity_kpi.update!(overall_total: weighted_total)
+    weighted_total
+  end
+
+  def compute_quantity_overall_total(values)
+    quantity_components.sum do |component|
+      max_input = component[:max_input_percent].to_d
+      next 0.to_d if max_input.zero?
+
+      actual_input = values[component[:field]].to_d
+      weight = component[:weight_percent].to_d
+      (actual_input / max_input) * weight
+    end.round(2)
   end
 
   def compute_quality_overall_total(scoring)
@@ -641,7 +731,7 @@ class KpiAssessmentsController < ApplicationController
       @quality_view_sections.sum { |section| section[:weighted_score].to_d }.round(2)
     @quantity_overall_total =
       @quantity_kpi&.overall_total&.to_d&.round(2) ||
-      @quantity_view_rows.sum { |row| row[:actual_score].to_d }.round(2)
+      @quantity_view_rows.sum { |row| row[:weighted_score].to_d }.round(2)
     @reviewed_by = reviewed_by_label(@assessment)
   end
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -727,14 +817,41 @@ class KpiAssessmentsController < ApplicationController
   def build_quantity_rows_for_display
     output = @quantity_kpi&.output_and_impact_based
 
-    quantity_components.map do |field, label, full_score|
+    quantity_components.map do |component|
+      actual_score = output&.public_send(component[:field]).to_d
+      max_input_score = component[:max_input_percent].to_d
+      weighted_score =
+        if max_input_score.zero?
+          0.to_d
+        else
+          (actual_score / max_input_score) * component[:weight_percent].to_d
+        end
+
       {
-        field: field,
-        label: label,
-        full_score: full_score.delete('%').to_d,
-        actual_score: output&.public_send(field).to_d
+        field: component[:field],
+        label: component[:label],
+        weight_percent: component[:weight_percent].to_d,
+        max_input_percent: max_input_score,
+        actual_score: actual_score,
+        weighted_score: weighted_score.round(2)
       }
     end
+  end
+
+  def quantity_scores_out_of_range_fields
+    quantity_components.filter_map do |component|
+      raw_value = params[component[:field]]
+      next if raw_value.blank?
+
+      score = to_decimal(raw_value)
+      max_input = component[:max_input_percent].to_d
+      component[:label] if score.negative? || score > max_input
+    end
+  end
+
+  def quantity_out_of_range_message
+    labels = quantity_scores_out_of_range_fields.join(', ')
+    "Quantity-based scores must be between 0 and the configured maximum score for: #{labels}."
   end
 
   # rubocop:disable Metrics/AbcSize

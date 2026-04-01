@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_26_093000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_01_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_26_093000) do
     t.string "fullname", null: false
     t.string "grade", null: false
     t.string "position", null: false
+    t.decimal "quality_based_total", precision: 5, scale: 2
+    t.decimal "quantity_based_total", precision: 5, scale: 2
     t.string "reviewer_email"
     t.bigint "staff_profile_id", null: false
     t.datetime "updated_at", null: false
@@ -213,4 +215,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_26_093000) do
   add_foreign_key "quarters", "kpi_assessments"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"
+  add_foreign_key "users", "roles"
 end
