@@ -9,7 +9,7 @@ export default class extends Controller {
   }
 
   connect() {
-    this.showQuality()
+    this.showQuantity()
   }
 
   showQuality() {

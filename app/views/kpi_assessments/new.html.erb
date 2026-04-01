@@ -1,4 +1,4 @@
-<div id="kpi_assessments" class="kpi-assessment-page" data-controller="kpi-assessment-form">
+<div id="kpi_assessments" class="kpi-assessment-page" data-controller="kpi-assessment-quantity-step">
   <div class="kpi-panel-title">KPI Assessment &gt; Add KPI Assessment</div>
 
   <div class="kpi-back-link-wrap">
@@ -7,10 +7,10 @@
     <% end %>
   </div>
 
-  <div class="kpi-info-banner" data-kpi-assessment-form-target="infoBanner">
+  <div class="kpi-info-banner" data-kpi-assessment-quantity-step-target="infoBanner">
     <i class="bi bi-info-circle-fill me-2"></i>
     Select an IDS Staff Member to review for KPI Assessment
-    <button class="btn-close ms-auto" type="button" aria-label="Close" data-action="click->kpi-assessment-form#closeInfoBanner"></button>
+    <button class="btn-close ms-auto" type="button" aria-label="Close" data-action="click->kpi-assessment-quantity-step#closeInfoBanner"></button>
   </div>
 
   <%= form_with url: step2_kpi_assessments_path, method: :get, local: true, class: "kpi-form" do %>
@@ -21,14 +21,14 @@
                 name="staff_profile_id"
                 class="form-select"
                 required
-                data-kpi-assessment-form-target="staffSelect"
-                data-action="change->kpi-assessment-form#staffChanged">
+                data-kpi-assessment-quantity-step-target="staffSelect"
+                data-action="change->kpi-assessment-quantity-step#staffChanged">
           <option value="">Select IDS Staff</option>
           <% @staff_profiles.each do |staff| %>
             <option value="<%= staff.staff_profile_id %>"
                     <%= "selected" if @selected_staff_id.to_s == staff.staff_profile_id.to_s %>
                     data-position="<%= staff.position %>"
-                    data-reviewer="<%= staff.supervisor_name %>">
+                    data-reviewer="<%= @reviewed_by %>">
               <%= staff.fullname %>
             </option>
           <% end %>
@@ -41,8 +41,9 @@
                type="text"
                class="form-control"
                placeholder="Position"
+               value="<%= @selected_staff&.position %>"
                readonly
-               data-kpi-assessment-form-target="positionField">
+               data-kpi-assessment-quantity-step-target="positionField">
       </div>
 
       <div class="col-md-6">
@@ -52,69 +53,74 @@
                type="text"
                class="form-control"
                placeholder="Reviewer"
-           value="<%= @reviewed_by %>"
+               value="<%= @reviewed_by %>"
                readonly
-               data-kpi-assessment-form-target="reviewedByField">
+               data-kpi-assessment-quantity-step-target="reviewedByField">
       </div>
     </div>
 
-    <div class="kpi-score-shell d-none" data-kpi-assessment-form-target="qualitySection">
+    <div class="kpi-score-shell mt-4 <%= @selected_staff_id.present? ? '' : 'd-none' %>"
+         data-controller="kpi-quantity-form"
+         data-kpi-assessment-quantity-step-target="quantitySection">
       <div class="kpi-score-header-row">
         <h2>Proposed Scoring For Researches Based On Their Position</h2>
       </div>
 
       <div class="kpi-mode-header-row">
         <div class="kpi-mode-pills">
-          <span class="mode-pill active">Quality-Based</span>
-          <span class="mode-pill">Quantity-Based</span>
+          <span class="mode-pill active">Quantity-Based</span>
+          <span class="mode-pill disabled">Quality-Based</span>
         </div>
 
         <div class="kpi-overall-score">Overall Total(%) : <span>---</span> / 100</div>
       </div>
 
-      <% @quality_sections.each do |section| %>
-        <div class="kpi-section-block" data-section-code="<%= section[:title].split('.').first %>">
-          <div class="kpi-section-title">
-            <span><%= section[:title] %></span>
-            <i class="bi bi-chevron-up"></i>
-          </div>
-
-          <table class="table kpi-score-table mb-0">
-            <thead>
-              <tr>
-                <th>Component of Assessment</th>
-                <th class="text-center">Full Score (%)</th>
-                <th class="text-center">Actual Score (%)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% section[:rows].each do |row| %>
-                <tr>
-                  <td><%= row[1] %></td>
-                  <td class="text-center full-score-cell" data-default-full-score="<%= row[2] %>"><%= row[2] %></td>
-                  <td>
-                    <input type="number"
-                           name="<%= row[0] %>"
-                           class="form-control score-input"
-                           placeholder="Enter Actual Score"
-                           data-default-placeholder="Enter Actual Score"
-                            value="<%= @quality_input_values[row[0]] %>"
-                           min="0"
-                           max="100"
-                           step="0.01"
-                           required>
-                  </td>
-                </tr>
-              <% end %>
-              <tr class="kpi-weight-row">
-                <td>Weightage and Score</td>
-                <td class="text-center section-weight-cell" data-default-section-weight="<%= section[:section_weight] %>"><%= section[:section_weight] %></td>
-                <td class="text-center section-score-cell">-%</td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="kpi-section-block">
+        <div class="kpi-section-title">
+          <span>Output and Impact Based</span>
+          <i class="bi bi-chevron-up"></i>
         </div>
-      <% end %>
+
+        <table class="table kpi-score-table mb-0">
+          <thead>
+            <tr>
+              <th>Component of Assessment</th>
+              <th class="text-center">Weight (%)</th>
+              <th class="text-center">Maximum Score (%)</th>
+              <th class="text-center">Actual Score (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @quantity_components.each do |component| %>
+              <tr>
+                <td><%= component[:label] %></td>
+                <td class="text-center"><%= component[:weight_percent] %>%</td>
+                <td class="text-center"><%= component[:max_input_percent] %>%</td>
+                <td>
+                  <input type="number"
+                         name="<%= component[:field] %>"
+                         class="form-control score-input"
+                         data-action="input->kpi-quantity-form#scoreChanged"
+                         data-weight="<%= component[:weight_percent] %>"
+                         data-max-input="<%= component[:max_input_percent] %>"
+                         placeholder="Enter Actual Score"
+                         min="0"
+                         max="<%= component[:max_input_percent] %>"
+                         value="<%= @quantity_input_values[component[:field]] %>"
+                         step="0.01"
+                         required>
+                </td>
+              </tr>
+            <% end %>
+            <tr class="kpi-weight-row">
+              <td>Weightage and Score</td>
+              <td class="text-center">100%</td>
+              <td class="text-center">-</td>
+              <td class="text-center" data-kpi-quantity-form-target="sectionScore">-%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="kpi-step-actions">
         <button class="btn btn-kpi-next" type="submit">

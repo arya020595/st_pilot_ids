@@ -34,10 +34,14 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_redirected_to kpi_assessments_path
 
     assessment = KpiAssessment.order(created_at: :desc).first
-    quantity_kpi = assessment.quarters.order(created_at: :desc).first.quantity_based_kpi
+    quarter = assessment.quarters.order(created_at: :desc).first
+    quantity_kpi = quarter.quantity_based_kpi
+    quality_kpi = quarter.quality_based_kpi
     output = quantity_kpi.output_and_impact_based
 
     assert_in_delta 100.0, quantity_kpi.overall_total.to_f, 0.01
+    assert_in_delta quantity_kpi.overall_total.to_f, assessment.quantity_based_total.to_f, 0.01
+    assert_in_delta quality_kpi.overall_total.to_f, assessment.quality_based_total.to_f, 0.01
     assert_in_delta 7.0, output.number_of_involvement.to_f, 0.01
     assert_in_delta 4.0, output.output_production.to_f, 0.01
     assert_in_delta 3.0, output.presentation_national_level.to_f, 0.01
@@ -49,9 +53,13 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_redirected_to kpi_assessments_path
 
     assessment = KpiAssessment.order(created_at: :desc).first
-    quantity_kpi = assessment.quarters.order(created_at: :desc).first.quantity_based_kpi
+    quarter = assessment.quarters.order(created_at: :desc).first
+    quantity_kpi = quarter.quantity_based_kpi
+    quality_kpi = quarter.quality_based_kpi
 
     assert_in_delta 50.0, quantity_kpi.overall_total.to_f, 0.01
+    assert_in_delta quantity_kpi.overall_total.to_f, assessment.quantity_based_total.to_f, 0.01
+    assert_in_delta quality_kpi.overall_total.to_f, assessment.quality_based_total.to_f, 0.01
   end
 
   test 'submit preview rejects over max quantity input' do
@@ -61,7 +69,7 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :redirect
-    assert_includes response.redirect_url, '/kpi_assessments/step2'
+    assert_includes response.redirect_url, '/kpi_assessments/new'
   end
 
   private

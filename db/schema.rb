@@ -215,4 +215,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_000001) do
   add_foreign_key "quarters", "kpi_assessments"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"
+  add_foreign_key "users", "roles"
 end

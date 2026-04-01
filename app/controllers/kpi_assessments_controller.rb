@@ -285,19 +285,21 @@ class KpiAssessmentsController < ApplicationController
     authorize :kpi_assessment, :index?
 
     @staff_profiles = available_staff_profiles.order(:fullname)
-    @quality_sections = quality_sections
+    @quantity_components = quantity_components
     @selected_staff_id = params[:staff_profile_id].presence
-    @reviewed_by = params[:reviewed_by].presence
-    @quality_input_values = quality_input_values_from_params
+    @selected_staff = find_selected_staff(@selected_staff_id)
+    @reviewed_by = reviewer_display_name
+    @quantity_input_values = quantity_input_values_from_params
   end
 
   def step2
     authorize :kpi_assessment, :index?
 
-    @quantity_components = quantity_components
+    @quality_sections = quality_sections
     @selected_staff_id = params[:staff_profile_id].presence
     @selected_staff = find_selected_staff(@selected_staff_id)
-    @reviewed_by = params[:reviewed_by].presence || @selected_staff&.supervisor_name
+    @reviewed_by = reviewer_display_name
+    @quantity_input_values = quantity_input_values_from_params
     @quality_input_values = quality_input_values_from_params
 
     if @selected_staff.blank?
@@ -306,10 +308,10 @@ class KpiAssessmentsController < ApplicationController
       return
     end
 
-    return unless missing_quality_score_fields.any? || @selected_staff_id.blank?
+    return unless missing_quantity_score_fields.any? || @selected_staff_id.blank?
 
-    redirect_to new_kpi_assessment_path(previous_step_params),
-                alert: 'Please fill in all quality-based scores before continuing.'
+    redirect_to new_kpi_assessment_path(quantity_step_params),
+                alert: 'Please fill in all quantity-based scores before continuing.'
   end
 
   def show
@@ -347,9 +349,12 @@ class KpiAssessmentsController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      update_quality_records!(@quality_kpi, @assessment.position)
-      update_quantity_records!(@quantity_kpi)
-      @assessment.touch
+      quality_total = update_quality_records!(@quality_kpi, @assessment.position)
+      quantity_total = update_quantity_records!(@quantity_kpi)
+      @assessment.update!(
+        quality_based_total: quality_total,
+        quantity_based_total: quantity_total
+      )
     end
 
     redirect_to kpi_assessment_path(@assessment), notice: 'KPI assessment updated successfully.'
@@ -378,21 +383,21 @@ class KpiAssessmentsController < ApplicationController
       return
     end
 
-    if missing_quality_score_fields.any?
-      redirect_to new_kpi_assessment_path(previous_step_params),
-                  alert: 'Please fill in all quality-based scores before continuing.'
-      return
-    end
-
     if missing_quantity_score_fields.any?
-      redirect_to step2_kpi_assessments_path(request.request_parameters),
-                  alert: 'Please fill in all quantity-based scores before submitting.'
+      redirect_to new_kpi_assessment_path(quantity_step_params),
+                  alert: 'Please fill in all quantity-based scores before continuing.'
       return
     end
 
     if quantity_scores_out_of_range_fields.any?
-      redirect_to step2_kpi_assessments_path(request.request_parameters),
+      redirect_to new_kpi_assessment_path(quantity_step_params),
                   alert: quantity_out_of_range_message
+      return
+    end
+
+    if missing_quality_score_fields.any?
+      redirect_to step2_kpi_assessments_path(quality_step_params),
+                  alert: 'Please fill in all quality-based scores before submitting.'
       return
     end
 
@@ -440,11 +445,23 @@ class KpiAssessmentsController < ApplicationController
     QUALITY_SCORE_FIELDS.index_with { |field| params[field].presence }
   end
 
-  def previous_step_params
+  def quantity_input_values_from_params
+    QUANTITY_SCORE_FIELDS.index_with { |field| params[field].presence }
+  end
+
+  def quantity_step_params
     {
       staff_profile_id: @selected_staff_id,
-      reviewed_by: @reviewed_by || @selected_staff&.supervisor_name
-    }.merge(quality_input_values_from_params.compact)
+      reviewed_by: reviewer_display_name
+    }.merge(quantity_input_values_from_params.compact)
+  end
+
+  def reviewer_display_name
+    current_user.name.presence || current_user.email
+  end
+
+  def quality_step_params
+    quantity_step_params.merge(quality_input_values_from_params.compact)
   end
 
   def find_selected_staff(staff_profile_id)
@@ -496,8 +513,13 @@ class KpiAssessmentsController < ApplicationController
     )
 
     quarter = assessment.quarters.create!(quarter_name: current_quarter_name)
-    create_quality_records!(quarter, staff_profile.position)
-    create_quantity_records!(quarter)
+    quality_total = create_quality_records!(quarter, staff_profile.position)
+    quantity_total = create_quantity_records!(quarter)
+
+    assessment.update!(
+      quality_based_total: quality_total,
+      quantity_based_total: quantity_total
+    )
   end
 
   def update_quality_records!(quality_kpi, position)
@@ -506,7 +528,9 @@ class KpiAssessmentsController < ApplicationController
     quality_attrs = quality_component_attributes
     update_quality_component_records!(quality_kpi, quality_attrs)
 
-    quality_kpi.update!(overall_total: compute_quality_overall_total(scoring))
+    overall_total = compute_quality_overall_total(scoring)
+    quality_kpi.update!(overall_total: overall_total)
+    overall_total
   end
 
   def create_quality_records!(quarter, position)
@@ -514,16 +538,19 @@ class KpiAssessmentsController < ApplicationController
 
     quality_attrs = quality_component_attributes
     components = create_quality_component_records!(quality_attrs)
+    overall_total = compute_quality_overall_total(scoring)
 
     QualityBasedKpi.create!(
       quarter: quarter,
-      overall_total: compute_quality_overall_total(scoring),
+      overall_total: overall_total,
       research_work: components[:research_work],
       financial_management: components[:financial_management],
       soft_skill: components[:soft_skill],
       hard_skill: components[:hard_skill],
       other_involvement: components[:other_involvement]
     )
+
+    overall_total
   end
 
   def quality_component_attributes
@@ -569,6 +596,8 @@ class KpiAssessmentsController < ApplicationController
       output_and_impact_based: output_and_impact,
       overall_total: weighted_total
     )
+
+    weighted_total
   end
 
   def update_quantity_records!(quantity_kpi)
@@ -578,6 +607,7 @@ class KpiAssessmentsController < ApplicationController
 
     quantity_kpi.output_and_impact_based.update!(output_attrs.merge(total_score: output_total))
     quantity_kpi.update!(overall_total: weighted_total)
+    weighted_total
   end
 
   def compute_quantity_overall_total(values)

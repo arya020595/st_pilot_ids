@@ -23,71 +23,26 @@
           <li class="nav-item" role="presentation">
             <button class="mode-pill active"
                     data-bs-toggle="pill"
-                    data-bs-target="#edit-kpi-quality"
-                    data-action="click->kpi-tab-total#showQuality"
-                    type="button"
-                    role="tab">Quality-Based</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="mode-pill"
-                    data-bs-toggle="pill"
                     data-bs-target="#edit-kpi-quantity"
                     data-action="click->kpi-tab-total#showQuantity"
                     type="button"
                     role="tab">Quantity-Based</button>
           </li>
+          <li class="nav-item" role="presentation">
+            <button class="mode-pill"
+                    data-bs-toggle="pill"
+                    data-bs-target="#edit-kpi-quality"
+                    data-action="click->kpi-tab-total#showQuality"
+                    type="button"
+                    role="tab">Quality-Based</button>
+          </li>
         </ul>
 
-        <div class="kpi-overall-score">Overall Total(%) : <span data-kpi-tab-total-target="totalValue"><%= @quality_overall_total %></span> / 100</div>
+        <div class="kpi-overall-score">Overall Total(%) : <span data-kpi-tab-total-target="totalValue"><%= @quantity_overall_total %></span> / 100</div>
       </div>
 
       <div class="tab-content">
-        <div class="tab-pane fade show active" id="edit-kpi-quality" role="tabpanel">
-          <% @quality_view_sections.each do |section| %>
-            <div class="kpi-section-block">
-              <div class="kpi-section-title">
-                <span><%= section[:title] %></span>
-                <i class="bi bi-chevron-up"></i>
-              </div>
-
-              <table class="table kpi-score-table mb-0">
-                <thead>
-                  <tr>
-                    <th>Component of Assessment</th>
-                    <th class="text-center">Full Score (%)</th>
-                    <th class="text-center">Actual Score (%)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% section[:rows].each do |row| %>
-                    <tr>
-                      <td><%= row[:label] %></td>
-                      <td class="text-center"><%= row[:full_score].to_d %>%</td>
-                      <td>
-                        <input type="number"
-                               name="<%= row[:field] %>"
-                               class="form-control score-input <%= 'is-disabled-by-position' if row[:locked] %>"
-                               min="0"
-                               max="<%= row[:full_score].to_d %>"
-                               step="0.01"
-                               value="<%= row[:actual_score].to_d %>"
-                               <%= 'readonly' if row[:locked] %>
-                               <%= 'required' unless row[:locked] %>>
-                      </td>
-                    </tr>
-                  <% end %>
-                  <tr class="kpi-weight-row">
-                    <td>Weightage and Score</td>
-                    <td class="text-center"><%= section[:section_weight] %>%</td>
-                    <td class="text-center"><%= section[:weighted_score] %>%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          <% end %>
-        </div>
-
-        <div class="tab-pane fade" id="edit-kpi-quantity" role="tabpanel">
+        <div class="tab-pane fade show active" id="edit-kpi-quantity" role="tabpanel">
           <div class="kpi-section-block mt-2">
             <div class="kpi-section-title">
               <span>Output and Impact Based</span>
@@ -130,6 +85,51 @@
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div class="tab-pane fade" id="edit-kpi-quality" role="tabpanel">
+          <% @quality_view_sections.each do |section| %>
+            <div class="kpi-section-block">
+              <div class="kpi-section-title">
+                <span><%= section[:title] %></span>
+                <i class="bi bi-chevron-up"></i>
+              </div>
+
+              <table class="table kpi-score-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Component of Assessment</th>
+                    <th class="text-center">Full Score (%)</th>
+                    <th class="text-center">Actual Score (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% section[:rows].each do |row| %>
+                    <tr>
+                      <td><%= row[:label] %></td>
+                      <td class="text-center"><%= row[:full_score].to_d %>%</td>
+                      <td>
+                        <input type="number"
+                               name="<%= row[:field] %>"
+                               class="form-control score-input <%= 'is-disabled-by-position' if row[:locked] %>"
+                               min="0"
+                               max="<%= row[:full_score].to_d %>"
+                               step="0.01"
+                               value="<%= row[:actual_score].to_d %>"
+                               <%= 'readonly' if row[:locked] %>
+                               <%= 'required' unless row[:locked] %>>
+                      </td>
+                    </tr>
+                  <% end %>
+                  <tr class="kpi-weight-row">
+                    <td>Weightage and Score</td>
+                    <td class="text-center"><%= section[:section_weight] %>%</td>
+                    <td class="text-center"><%= section[:weighted_score] %>%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <% end %>
         </div>
       </div>
 

@@ -1,8 +1,11 @@
-<div id="kpi_assessments" class="kpi-assessment-page" data-controller="kpi-quantity-form">
+<div id="kpi_assessments"
+     class="kpi-assessment-page"
+     data-controller="kpi-quality-form"
+     data-kpi-quality-form-position-value="<%= @selected_staff&.position.to_s %>">
   <div class="kpi-panel-title">KPI Assessment &gt; Add KPI Assessment</div>
 
   <div class="kpi-back-link-wrap">
-    <%= link_to new_kpi_assessment_path({ staff_profile_id: @selected_staff_id, reviewed_by: @reviewed_by }.merge(@quality_input_values.compact)), class: "kpi-back-link" do %>
+    <%= link_to new_kpi_assessment_path({ staff_profile_id: @selected_staff_id, reviewed_by: @reviewed_by }.merge(@quantity_input_values.compact)), class: "kpi-back-link" do %>
       <i class="bi bi-arrow-left me-2"></i>Back to KPI Assessment
     <% end %>
   </div>
@@ -10,7 +13,7 @@
   <%= form_with url: submit_preview_kpi_assessments_path, method: :post, local: true, class: "kpi-form" do %>
     <%= hidden_field_tag :staff_profile_id, @selected_staff_id %>
     <%= hidden_field_tag :reviewed_by, @reviewed_by %>
-    <% @quality_input_values.each do |field, value| %>
+    <% @quantity_input_values.each do |field, value| %>
       <%= hidden_field_tag field, value %>
     <% end %>
 
@@ -47,62 +50,59 @@
 
       <div class="kpi-mode-header-row">
         <div class="kpi-mode-pills">
-          <span class="mode-pill disabled">Quality-Based</span>
-          <span class="mode-pill active">Quantity-Based</span>
+          <span class="mode-pill disabled">Quantity-Based</span>
+          <span class="mode-pill active">Quality-Based</span>
         </div>
 
         <div class="kpi-overall-score">Overall Total(%) : <span>---</span> / 100</div>
       </div>
 
-      <div class="kpi-section-block">
-        <div class="kpi-section-title">
-          <span>Output and Impact Based</span>
-          <i class="bi bi-chevron-up"></i>
-        </div>
+      <% @quality_sections.each do |section| %>
+        <div class="kpi-section-block" data-section-code="<%= section[:title].split('.').first %>">
+          <div class="kpi-section-title">
+            <span><%= section[:title] %></span>
+            <i class="bi bi-chevron-up"></i>
+          </div>
 
-        <table class="table kpi-score-table mb-0">
-          <thead>
-            <tr>
-              <th>Component of Assessment</th>
-              <th class="text-center">Weight (%)</th>
-              <th class="text-center">Maximum Score (%)</th>
-              <th class="text-center">Actual Score (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @quantity_components.each do |component| %>
+          <table class="table kpi-score-table mb-0">
+            <thead>
               <tr>
-                <td><%= component[:label] %></td>
-                <td class="text-center"><%= component[:weight_percent] %>%</td>
-                <td class="text-center"><%= component[:max_input_percent] %>%</td>
-                <td>
-                  <input type="number"
-                         name="<%= component[:field] %>"
-                         class="form-control score-input"
-                         data-action="input->kpi-quantity-form#scoreChanged"
-                         data-weight="<%= component[:weight_percent] %>"
-                         data-max-input="<%= component[:max_input_percent] %>"
-                         placeholder="Enter Actual Score"
-                         min="0"
-                         max="<%= component[:max_input_percent] %>"
-                         value="<%= params[component[:field]] %>"
-                         step="0.01"
-                         required>
-                </td>
+                <th>Component of Assessment</th>
+                <th class="text-center">Full Score (%)</th>
+                <th class="text-center">Actual Score (%)</th>
               </tr>
-            <% end %>
-            <tr class="kpi-weight-row">
-              <td>Weightage and Score</td>
-              <td class="text-center">100%</td>
-              <td class="text-center">-</td>
-              <td class="text-center" data-kpi-quantity-form-target="sectionScore">-%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              <% section[:rows].each do |row| %>
+                <tr>
+                  <td><%= row[1] %></td>
+                  <td class="text-center full-score-cell" data-default-full-score="<%= row[2] %>"><%= row[2] %></td>
+                  <td>
+                    <input type="number"
+                           name="<%= row[0] %>"
+                           class="form-control score-input"
+                           placeholder="Enter Actual Score"
+                           data-default-placeholder="Enter Actual Score"
+                           value="<%= @quality_input_values[row[0]] %>"
+                           min="0"
+                           max="100"
+                           step="0.01"
+                           required>
+                  </td>
+                </tr>
+              <% end %>
+              <tr class="kpi-weight-row">
+                <td>Weightage and Score</td>
+                <td class="text-center section-weight-cell" data-default-section-weight="<%= section[:section_weight] %>"><%= section[:section_weight] %></td>
+                <td class="text-center section-score-cell">-%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
 
       <div class="kpi-step-actions split">
-        <%= link_to new_kpi_assessment_path({ staff_profile_id: @selected_staff_id, reviewed_by: @reviewed_by }.merge(@quality_input_values.compact)), class: "btn btn-kpi-prev" do %>
+        <%= link_to new_kpi_assessment_path({ staff_profile_id: @selected_staff_id, reviewed_by: @reviewed_by }.merge(@quantity_input_values.compact)), class: "btn btn-kpi-prev" do %>
           <i class="bi bi-arrow-left-short me-1"></i>Previous
         <% end %>
 
