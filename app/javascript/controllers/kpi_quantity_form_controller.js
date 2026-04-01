@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Quantity step uses direct total without additional section weighting.
+// Quantity step computes weighted contribution: (actual / max-input) * weight.
 export default class extends Controller {
   static targets = ["sectionScore"]
 
@@ -25,7 +25,14 @@ export default class extends Controller {
   }
 
   updateTotal() {
-    const total = this.scoreInputs().reduce((sum, input) => sum + this.toNumber(input.value), 0)
+    const total = this.scoreInputs().reduce((sum, input) => {
+      const actual = this.toNumber(input.value)
+      const maxInput = this.toNumber(input.dataset.maxInput)
+      const weight = this.toNumber(input.dataset.weight)
+      if (maxInput <= 0) return sum
+
+      return sum + ((actual / maxInput) * weight)
+    }, 0)
 
     if (this.hasSectionScoreTarget) {
       this.sectionScoreTarget.textContent = `${total.toFixed(2)}%`

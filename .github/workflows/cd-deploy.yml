@@ -13,6 +13,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    permissions:
+      packages: read
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -65,12 +67,13 @@ jobs:
         uses: appleboy/ssh-action@v1.2.5
         env:
           DEPLOY_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           port: ${{ secrets.PRODUCTION_SSH_PORT || 22 }}
-          envs: DEPLOY_SHA
+          envs: DEPLOY_SHA,GHCR_TOKEN
           timeout: 60s
           command_timeout: 10m
           script: |
@@ -87,6 +90,9 @@ jobs:
 
             # Get short SHA for tagging
             SHORT_SHA=$(echo "$DEPLOY_SHA" | cut -c1-7)
+
+            echo "→ Authenticating with GitHub Container Registry..."
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
             echo "→ Pulling Docker image: ${IMAGE}:main-${SHORT_SHA}..."
             docker pull ${IMAGE}:main-${SHORT_SHA}

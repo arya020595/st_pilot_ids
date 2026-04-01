@@ -43,7 +43,7 @@ services:
       TZ: Asia/Jakarta
       PORT: 3000
     ports:
-      - "${PORT:-3009}:3000"
+      - "${APP_PORT:-3009}:3000"
     volumes:
       - storage_data:/rails/storage
       - log_data:/rails/log
