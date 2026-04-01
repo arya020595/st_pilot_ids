@@ -453,6 +453,7 @@ class KpiAssessmentsController < ApplicationController
     available_staff_profiles.find_by(staff_profile_id: staff_profile_id)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def available_staff_profiles
     return StaffProfile.all if current_user.superadmin?
     return StaffProfile.all if current_user.role&.name == 'supervisor'
@@ -470,6 +471,7 @@ class KpiAssessmentsController < ApplicationController
 
     scoped_profiles.where(staff_profile_id: allowed_ids)
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def normalize_name_key(value)
     value.to_s.downcase.gsub(/[^a-z0-9]/, '')

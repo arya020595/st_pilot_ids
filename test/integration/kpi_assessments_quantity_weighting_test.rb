@@ -2,6 +2,7 @@
 
 require 'test_helper'
 
+# rubocop:disable Metrics/ClassLength
 class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
@@ -124,3 +125,4 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     }
   end
 end
+# rubocop:enable Metrics/ClassLength
