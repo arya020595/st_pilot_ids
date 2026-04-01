@@ -64,24 +64,28 @@
           <thead>
             <tr>
               <th>Component of Assessment</th>
-              <th class="text-center">Full Score (%)</th>
+              <th class="text-center">Weight (%)</th>
+              <th class="text-center">Maximum Score (%)</th>
               <th class="text-center">Actual Score (%)</th>
             </tr>
           </thead>
           <tbody>
             <% @quantity_components.each do |component| %>
               <tr>
-                <td><%= component[1] %></td>
-                <td class="text-center"><%= component[2] %></td>
+                <td><%= component[:label] %></td>
+                <td class="text-center"><%= component[:weight_percent] %>%</td>
+                <td class="text-center"><%= component[:max_input_percent] %>%</td>
                 <td>
                   <input type="number"
-                         name="<%= component[0] %>"
+                         name="<%= component[:field] %>"
                          class="form-control score-input"
                          data-action="input->kpi-quantity-form#scoreChanged"
+                         data-weight="<%= component[:weight_percent] %>"
+                         data-max-input="<%= component[:max_input_percent] %>"
                          placeholder="Enter Actual Score"
                          min="0"
-                         max="<%= component[2].delete('%') %>"
-                         value="<%= params[component[0]] %>"
+                         max="<%= component[:max_input_percent] %>"
+                         value="<%= params[component[:field]] %>"
                          step="0.01"
                          required>
                 </td>
@@ -90,6 +94,7 @@
             <tr class="kpi-weight-row">
               <td>Weightage and Score</td>
               <td class="text-center">100%</td>
+              <td class="text-center">-</td>
               <td class="text-center" data-kpi-quantity-form-target="sectionScore">-%</td>
             </tr>
           </tbody>

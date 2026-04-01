@@ -112,7 +112,8 @@
             <thead>
               <tr>
                 <th>Component of Assessment</th>
-                <th class="text-center">Full Score (%)</th>
+                <th class="text-center">Weight (%)</th>
+                <th class="text-center">Maximum Score (%)</th>
                 <th class="text-center">Actual Score (%)</th>
               </tr>
             </thead>
@@ -120,14 +121,16 @@
               <% @quantity_view_rows.each do |row| %>
                 <tr>
                   <td><%= row[:label] %></td>
-                  <td class="text-center"><%= row[:full_score].to_d %>%</td>
+                  <td class="text-center"><%= row[:weight_percent].to_d %>%</td>
+                  <td class="text-center"><%= row[:max_input_percent].to_d %>%</td>
                   <td class="text-center"><%= row[:actual_score].to_d %>%</td>
                 </tr>
               <% end %>
               <tr class="kpi-weight-row">
                 <td>Weightage and Score</td>
                 <td class="text-center">100%</td>
-                  <td class="text-center"><%= @quantity_overall_total %>%</td>
+                <td class="text-center">-</td>
+                <td class="text-center"><%= @quantity_overall_total %>%</td>
               </tr>
             </tbody>
           </table>

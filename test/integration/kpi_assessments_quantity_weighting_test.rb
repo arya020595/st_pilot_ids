@@ -1,0 +1,126 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+
+class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
+  setup do
+    superadmin_role = Role.find_or_create_by!(name: 'superadmin')
+
+    @user = User.create!(
+      name: 'Supervisor QA',
+      email: "qa-#{SecureRandom.hex(6)}@example.com",
+      password: 'password123',
+      password_confirmation: 'password123',
+      role: superadmin_role
+    )
+
+    @staff_profile = StaffProfile.create!(
+      fullname: 'Test Staff',
+      position: 'Research Assistant',
+      division: 'Division A',
+      supervisor_name: 'Supervisor QA',
+      supervisor_email: @user.email
+    )
+
+    sign_in @user
+  end
+
+  test 'submit preview computes quantity overall total as 100 for max inputs' do
+    post submit_preview_kpi_assessments_path, params: submission_params(quantity_max_inputs)
+
+    assert_redirected_to kpi_assessments_path
+
+    assessment = KpiAssessment.order(created_at: :desc).first
+    quantity_kpi = assessment.quarters.order(created_at: :desc).first.quantity_based_kpi
+    output = quantity_kpi.output_and_impact_based
+
+    assert_in_delta 100.0, quantity_kpi.overall_total.to_f, 0.01
+    assert_in_delta 7.0, output.number_of_involvement.to_f, 0.01
+    assert_in_delta 4.0, output.output_production.to_f, 0.01
+    assert_in_delta 3.0, output.presentation_national_level.to_f, 0.01
+  end
+
+  test 'submit preview computes quantity overall total as 50 for half inputs' do
+    post submit_preview_kpi_assessments_path, params: submission_params(quantity_half_inputs)
+
+    assert_redirected_to kpi_assessments_path
+
+    assessment = KpiAssessment.order(created_at: :desc).first
+    quantity_kpi = assessment.quarters.order(created_at: :desc).first.quantity_based_kpi
+
+    assert_in_delta 50.0, quantity_kpi.overall_total.to_f, 0.01
+  end
+
+  test 'submit preview rejects over max quantity input' do
+    assert_no_difference 'KpiAssessment.count' do
+      post submit_preview_kpi_assessments_path,
+           params: submission_params(quantity_max_inputs.merge(number_of_involvement: '8'))
+    end
+
+    assert_response :redirect
+    assert_includes response.redirect_url, '/kpi_assessments/step2'
+  end
+
+  private
+
+  def submission_params(quantity_inputs)
+    {
+      staff_profile_id: @staff_profile.staff_profile_id,
+      reviewed_by: @user.name
+    }.merge(quality_inputs).merge(quantity_inputs)
+  end
+
+  def quality_inputs
+    {
+      proposal_preparation: '1',
+      proposal_presentation: '1',
+      data_collection: '1',
+      data_entry_and_cleaning: '1',
+      report_writing: '1',
+      analysis_of_data: '1',
+      presentation_of_findings: '1',
+      budgeting: '1',
+      record_keeping: '1',
+      cashflow_management: '1',
+      compliance: '1',
+      writing_skill: '1',
+      presentation_skill: '1',
+      computer_skill: '1',
+      management_skill: '1',
+      statistical_knowledge: '1',
+      communication_skill: '1',
+      collaboration_teamwork: '1',
+      problem_solving: '1',
+      leadership: '1',
+      attention_details: '1',
+      ideas_platform: '1',
+      any_social_media_platform: '1',
+      ids_watch_column: '1',
+      others: '1'
+    }
+  end
+
+  def quantity_max_inputs
+    {
+      number_of_involvement: '7',
+      output_production: '4',
+      acceptance_of_outputs: '4',
+      uptake_of_outputs: '2',
+      presentation_state_level: '5',
+      presentation_national_level: '3'
+    }
+  end
+
+  def quantity_half_inputs
+    {
+      number_of_involvement: '3.5',
+      output_production: '2',
+      acceptance_of_outputs: '2',
+      uptake_of_outputs: '1',
+      presentation_state_level: '2.5',
+      presentation_national_level: '1.5'
+    }
+  end
+end
