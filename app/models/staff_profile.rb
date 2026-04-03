@@ -7,7 +7,6 @@ class StaffProfile < ApplicationRecord
   validates(
     :fullname,
     :position,
-    :division,
     :supervisor_name,
     :supervisor_email,
     presence: true

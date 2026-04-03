@@ -42,6 +42,8 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_in_delta 100.0, quantity_kpi.overall_total.to_f, 0.01
     assert_in_delta quantity_kpi.overall_total.to_f, assessment.quantity_based_total.to_f, 0.01
     assert_in_delta quality_kpi.overall_total.to_f, assessment.quality_based_total.to_f, 0.01
+    expected_overall = (quality_kpi.overall_total.to_d * 0.60) + (quantity_kpi.overall_total.to_d * 0.40)
+    assert_in_delta expected_overall.to_f, assessment.overall_score.to_f, 0.01
     assert_in_delta 7.0, output.number_of_involvement.to_f, 0.01
     assert_in_delta 4.0, output.output_production.to_f, 0.01
     assert_in_delta 3.0, output.presentation_national_level.to_f, 0.01
@@ -60,6 +62,28 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_in_delta 50.0, quantity_kpi.overall_total.to_f, 0.01
     assert_in_delta quantity_kpi.overall_total.to_f, assessment.quantity_based_total.to_f, 0.01
     assert_in_delta quality_kpi.overall_total.to_f, assessment.quality_based_total.to_f, 0.01
+    expected_overall = (quality_kpi.overall_total.to_d * 0.60) + (quantity_kpi.overall_total.to_d * 0.40)
+    assert_in_delta expected_overall.to_f, assessment.overall_score.to_f, 0.01
+  end
+
+  test 'update recalculates overall score when quantity changes' do
+    post submit_preview_kpi_assessments_path, params: submission_params(quantity_max_inputs)
+
+    assessment = KpiAssessment.order(created_at: :desc).first
+    original_overall = assessment.overall_score.to_f
+
+    patch kpi_assessment_path(assessment), params: submission_params(quantity_half_inputs)
+
+    assert_redirected_to kpi_assessment_path(assessment)
+
+    assessment.reload
+    quarter = assessment.quarters.order(created_at: :desc).first
+    quality_kpi = quarter.quality_based_kpi
+    quantity_kpi = quarter.quantity_based_kpi
+    expected_overall = (quality_kpi.overall_total.to_d * 0.60) + (quantity_kpi.overall_total.to_d * 0.40)
+
+    assert_in_delta expected_overall.to_f, assessment.overall_score.to_f, 0.01
+    assert_not_equal original_overall.round(2), assessment.overall_score.to_f.round(2)
   end
 
   test 'submit preview rejects over max quantity input' do
@@ -70,6 +94,21 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
 
     assert_response :redirect
     assert_includes response.redirect_url, '/kpi_assessments/new'
+  end
+
+  test 'show page renders quantity numbers without percent and weighted actual score with percent' do
+    post submit_preview_kpi_assessments_path, params: submission_params(quantity_max_inputs)
+
+    assessment = KpiAssessment.order(created_at: :desc).first
+    get kpi_assessment_path(assessment)
+
+    assert_response :success
+    assert_includes response.body, 'Maximum Number (Qty)'
+    assert_includes response.body, 'Actual Number (Qty)'
+    assert_match(
+      /Number of Involvement<\/td>\s*<td class="text-center">20\.0%<\/td>\s*<td class="text-center">7<\/td>\s*<td class="text-center">7<\/td>\s*<td class="text-center">20\.0%<\/td>/,
+      response.body
+    )
   end
 
   private

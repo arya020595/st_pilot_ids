@@ -1,20 +1,19 @@
 <div class="container-fluid px-4 py-4">
-  <h1 class="mb-4">BI Dashboard</h1>
-  <div class="row g-4 mb-4">
-    <div class="col-md-12 text-center">
-      <% if ENV["BI_DASHBOARD_URL"].present? %>
-        <div class="powerbi-dashboard">
-          <iframe title="BI Dashboard"
-              width="100%"
-              height="550"
-              src="<%= ENV["BI_DASHBOARD_URL"] %>"
-              frameborder="0"
-              allowFullScreen="true">
-          </iframe>
-        </div>
-      <% else %>
-        <p class="text-muted">BI Dashboard is not configured. Please set the <code>BI_DASHBOARD_URL</code> environment variable.</p>
-      <% end %>
+  <div class="app-page-title">BI Dashboard</div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="ratio" style="--bs-aspect-ratio: 62.24%;">
+        <iframe
+          title="IDS_ASSESSMENT DASHBOARD"
+          src="https://app.powerbi.com/view?r=eyJrIjoiN2NjZDBhZGEtYzY5Yy00YjkxLWEwOTMtMjc2YWU0NWU2MWM2IiwidCI6IjNiNmFjMTJhLTgwMDAtNGYwZS1iYmMyLWYwNzhiNTY0NGFlNiIsImMiOjEwfQ%3D%3D"
+          frameborder="0"
+          allowfullscreen="true"
+          loading="lazy"
+          style="border: 0;"
+          class="w-100 h-100"
+        ></iframe>
+      </div>
     </div>
   </div>
 </div>
