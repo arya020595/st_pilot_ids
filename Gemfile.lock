@@ -174,7 +174,7 @@ GEM
     google-protobuf (4.34.0-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
-    grover (1.2.9)
+    grover (1.2.10)
       nokogiri (~> 1)
     htmlbeautifier (1.4.3)
     i18n (1.14.8)
