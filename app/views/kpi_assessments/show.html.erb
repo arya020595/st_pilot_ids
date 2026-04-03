@@ -33,6 +33,13 @@
       <label class="form-label fw-semibold">Reviewed By</label>
       <input type="text" class="form-control" readonly value="<%= @reviewed_by %>">
     </div>
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Final Score</label>
+      <input type="text"
+             class="form-control"
+             readonly
+             value="<%= @assessment.overall_score.present? ? "#{number_with_precision(@assessment.overall_score, precision: 2)}%" : '---' %>">
+    </div>
   </div>
 
   <div class="kpi-score-shell mt-4"
@@ -78,7 +85,8 @@
               <tr>
                 <th>Component of Assessment</th>
                 <th class="text-center">Weight (%)</th>
-                <th class="text-center">Maximum Score (%)</th>
+                <th class="text-center">Maximum Number (Qty)</th>
+                <th class="text-center">Actual Number (Qty)</th>
                 <th class="text-center">Actual Score (%)</th>
               </tr>
             </thead>
@@ -87,13 +95,15 @@
                 <tr>
                   <td><%= row[:label] %></td>
                   <td class="text-center"><%= row[:weight_percent].to_d %>%</td>
-                  <td class="text-center"><%= row[:max_input_percent].to_d %>%</td>
-                  <td class="text-center"><%= row[:actual_score].to_d %>%</td>
+                  <td class="text-center"><%= row[:max_input_percent].to_i %></td>
+                  <td class="text-center"><%= row[:actual_score].to_i %></td>
+                  <td class="text-center"><%= row[:weighted_score].to_d %>%</td>
                 </tr>
               <% end %>
               <tr class="kpi-weight-row">
                 <td>Weightage and Score</td>
                 <td class="text-center">100%</td>
+                <td class="text-center">-</td>
                 <td class="text-center">-</td>
                 <td class="text-center"><%= @quantity_overall_total %>%</td>
               </tr>
