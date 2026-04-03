@@ -105,15 +105,15 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'Maximum Number (Qty)'
     assert_includes response.body, 'Actual Number (Qty)'
-    assert_match(
-      %r{
-        Number of Involvement</td>\s*
-        <td class="text-center">20\.0%</td>\s*
-        <td class="text-center">7</td>\s*
-        <td class="text-center">7</td>\s*
-        <td class="text-center">20\.0%</td>
-      }x,
-      response.body
+
+    row = Nokogiri::HTML(response.body)
+                .css('table.kpi-score-table tbody tr')
+                .find { |tr| tr.css('td').first&.text&.strip == 'Number of Involvement' }
+
+    assert row.present?, 'Expected to find the Number of Involvement row'
+    assert_equal(
+      ['Number of Involvement', '20.0%', '7', '7', '20.0%'],
+      row.css('td').map { |td| td.text.strip }
     )
   end
 
