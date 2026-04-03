@@ -106,7 +106,13 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'Maximum Number (Qty)'
     assert_includes response.body, 'Actual Number (Qty)'
     assert_match(
-      /Number of Involvement<\/td>\s*<td class="text-center">20\.0%<\/td>\s*<td class="text-center">7<\/td>\s*<td class="text-center">7<\/td>\s*<td class="text-center">20\.0%<\/td>/,
+      %r{
+        Number of Involvement</td>\s*
+        <td class="text-center">20\.0%</td>\s*
+        <td class="text-center">7</td>\s*
+        <td class="text-center">7</td>\s*
+        <td class="text-center">20\.0%</td>
+      }x,
       response.body
     )
   end
