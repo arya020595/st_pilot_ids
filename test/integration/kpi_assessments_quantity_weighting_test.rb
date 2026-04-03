@@ -107,8 +107,8 @@ class KpiAssessmentsQuantityWeightingTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'Actual Number (Qty)'
 
     row = Nokogiri::HTML(response.body)
-      .css('table.kpi-score-table tbody tr')
-      .find { |tr| tr.css('td').first&.text&.strip == 'Number of Involvement' }
+                  .css('table.kpi-score-table tbody tr')
+                  .find { |tr| tr.css('td').first&.text&.strip == 'Number of Involvement' }
 
     assert row.present?, 'Expected to find the Number of Involvement row'
     assert_equal(
