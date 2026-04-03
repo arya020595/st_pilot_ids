@@ -57,6 +57,15 @@
                readonly
                data-kpi-assessment-quantity-step-target="reviewedByField">
       </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-semibold" for="final_score">Final Score</label>
+        <input id="final_score"
+               type="text"
+               class="form-control"
+               value="---"
+               readonly>
+      </div>
     </div>
 
     <div class="kpi-score-shell mt-4 <%= @selected_staff_id.present? ? '' : 'd-none' %>"
@@ -86,7 +95,8 @@
             <tr>
               <th>Component of Assessment</th>
               <th class="text-center">Weight (%)</th>
-              <th class="text-center">Maximum Score (%)</th>
+              <th class="text-center">Maximum Number (Qty)</th>
+              <th class="text-center">Actual Number (Qty)</th>
               <th class="text-center">Actual Score (%)</th>
             </tr>
           </thead>
@@ -95,7 +105,7 @@
               <tr>
                 <td><%= component[:label] %></td>
                 <td class="text-center"><%= component[:weight_percent] %>%</td>
-                <td class="text-center"><%= component[:max_input_percent] %>%</td>
+                <td class="text-center"><%= component[:max_input_percent].to_i %></td>
                 <td>
                   <input type="number"
                          name="<%= component[:field] %>"
@@ -103,18 +113,20 @@
                          data-action="input->kpi-quantity-form#scoreChanged"
                          data-weight="<%= component[:weight_percent] %>"
                          data-max-input="<%= component[:max_input_percent] %>"
-                         placeholder="Enter Actual Score"
+                         placeholder="Enter Actual Number"
                          min="0"
                          max="<%= component[:max_input_percent] %>"
-                         value="<%= @quantity_input_values[component[:field]] %>"
-                         step="0.01"
+                         value="<%= @quantity_input_values[component[:field]].to_i if @quantity_input_values[component[:field]].present? %>"
+                         step="1"
                          required>
                 </td>
+                <td class="text-center" data-kpi-quantity-form-target="rowScore">-%</td>
               </tr>
             <% end %>
             <tr class="kpi-weight-row">
               <td>Weightage and Score</td>
               <td class="text-center">100%</td>
+              <td class="text-center">-</td>
               <td class="text-center">-</td>
               <td class="text-center" data-kpi-quantity-form-target="sectionScore">-%</td>
             </tr>

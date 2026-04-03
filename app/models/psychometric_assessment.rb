@@ -6,6 +6,8 @@ class PsychometricAssessment < ApplicationRecord
   DEFAULT_ADMIN_DRIVE_URL = 'https://drive.google.com/drive/folders/1SXlcKoDtAU0yygW03ahbOh1JOZH9cPST?usp=drive_link'
   DEFAULT_STAFF_TEST_DRIVE_URL = 'https://drive.google.com/drive/folders/1H6abCbUu_lWnzHb4mPv7evMlrUyLdKi1?usp=drive_link'
   SUPERVISOR_DRIVE_URLS_BY_EMAIL = {
+    'sdyrina@gmail.com' => 'https://drive.google.com/drive/folders/1oPRAp5mDysGxvUnZg1L7fuEYwulnf-pA?usp=sharing',
+    'alexzander.palik@ids.org.my' => 'https://drive.google.com/drive/folders/1oPRAp5mDysGxvUnZg1L7fuEYwulnf-pA?usp=sharing',
     'victor.sikain@ids.org.my' => 'https://drive.google.com/drive/folders/1kyhZQ1nCAt6LGMDhiSkf6cMVSZLvTrVR?usp=sharing',
     'anita.limjoon@ids.org.my' => 'https://drive.google.com/drive/folders/14u8TStfeH1xc-L-mit-FUYbUs5hAYDZl?usp=sharing',
     'mansalasah.musa@ids.org.my' => 'https://drive.google.com/drive/folders/1Bvxsr2AjB1jLV46JD-mbiyqz5o5Ex_eh?usp=sharing',

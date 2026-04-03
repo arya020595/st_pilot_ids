@@ -353,7 +353,8 @@ class KpiAssessmentsController < ApplicationController
       quantity_total = update_quantity_records!(@quantity_kpi)
       @assessment.update!(
         quality_based_total: quality_total,
-        quantity_based_total: quantity_total
+        quantity_based_total: quantity_total,
+        overall_score: compute_overall_score(quality_total, quantity_total)
       )
     end
 
@@ -518,8 +519,15 @@ class KpiAssessmentsController < ApplicationController
 
     assessment.update!(
       quality_based_total: quality_total,
-      quantity_based_total: quantity_total
+      quantity_based_total: quantity_total,
+      overall_score: compute_overall_score(quality_total, quantity_total)
     )
+  end
+
+  def compute_overall_score(quality_total, quantity_total)
+    return nil if quality_total.nil? || quantity_total.nil?
+
+    ((quality_total.to_d * 0.60) + (quantity_total.to_d * 0.40)).round(2)
   end
 
   def update_quality_records!(quality_kpi, position)

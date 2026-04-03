@@ -10,8 +10,30 @@
   </div>
 
   <%= form_with url: kpi_assessment_path(@assessment), method: :patch, local: true, class: "kpi-form" do %>
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Staff Name</label>
+        <input type="text" class="form-control" readonly value="<%= @assessment.fullname %>">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Position</label>
+        <input type="text" class="form-control" readonly value="<%= @assessment.position %>">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Reviewed By</label>
+        <input type="text" class="form-control" readonly value="<%= @reviewed_by %>">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold">Final Score</label>
+        <input type="text"
+               class="form-control"
+               readonly
+               value="<%= @assessment.overall_score.present? ? "#{number_with_precision(@assessment.overall_score, precision: 2)}%" : '---' %>">
+      </div>
+    </div>
+
     <div class="kpi-score-shell mt-2"
-         data-controller="kpi-tab-total"
+         data-controller="kpi-tab-total kpi-quantity-form"
          data-kpi-tab-total-quality-value="<%= @quality_overall_total %>"
          data-kpi-tab-total-quantity-value="<%= @quantity_overall_total %>">
       <div class="kpi-score-header-row">
@@ -54,7 +76,8 @@
                 <tr>
                   <th>Component of Assessment</th>
                   <th class="text-center">Weight (%)</th>
-                  <th class="text-center">Maximum Score (%)</th>
+                  <th class="text-center">Maximum Number (Qty)</th>
+                  <th class="text-center">Actual Number (Qty)</th>
                   <th class="text-center">Actual Score (%)</th>
                 </tr>
               </thead>
@@ -63,24 +86,29 @@
                   <tr>
                     <td><%= row[:label] %></td>
                     <td class="text-center"><%= row[:weight_percent].to_d %>%</td>
-                    <td class="text-center"><%= row[:max_input_percent].to_d %>%</td>
+                    <td class="text-center"><%= row[:max_input_percent].to_i %></td>
                     <td>
                       <input type="number"
                              name="<%= row[:field] %>"
                              class="form-control score-input"
+                             data-action="input->kpi-quantity-form#scoreChanged"
+                             data-weight="<%= row[:weight_percent].to_d %>"
+                             data-max-input="<%= row[:max_input_percent].to_d %>"
                              min="0"
                              max="<%= row[:max_input_percent].to_d %>"
-                             step="0.01"
-                             value="<%= row[:actual_score].to_d %>"
+                             step="1"
+                             value="<%= row[:actual_score].to_i %>"
                              required>
                     </td>
+                    <td class="text-center" data-kpi-quantity-form-target="rowScore"><%= row[:weighted_score].to_d %>%</td>
                   </tr>
                 <% end %>
                 <tr class="kpi-weight-row">
                   <td>Weightage and Score</td>
                   <td class="text-center">100%</td>
                   <td class="text-center">-</td>
-                  <td class="text-center"><%= @quantity_overall_total %>%</td>
+                  <td class="text-center">-</td>
+                  <td class="text-center" data-kpi-quantity-form-target="sectionScore"><%= @quantity_overall_total %>%</td>
                 </tr>
               </tbody>
             </table>

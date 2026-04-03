@@ -59,9 +59,9 @@ staff_profiles_data = [
     supervisor_email: 'mansalasah.musa@ids.org.my'
   },
   {
-    fullname: 'Hajah Royaini Matusin',
-    position: 'Research Associate', division: 'RDD', supervisor_name: 'Anita Limjoon',
-    supervisor_email: 'anita.limjoon@ids.org.my'
+    fullname: 'Fernando Jerry',
+    position: 'Research Officer', division: '', supervisor_name: 'Alexzander Bin Palik',
+    supervisor_email: 'alexzander.palik@ids.org.my'
   },
   {
     fullname: 'Noralizah Halid',

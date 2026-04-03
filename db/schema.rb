@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_01_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_02_080000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_000001) do
     t.string "employment_level", null: false
     t.string "fullname", null: false
     t.string "grade", null: false
+    t.decimal "overall_score", precision: 5, scale: 2
     t.string "position", null: false
     t.decimal "quality_based_total", precision: 5, scale: 2
     t.decimal "quantity_based_total", precision: 5, scale: 2

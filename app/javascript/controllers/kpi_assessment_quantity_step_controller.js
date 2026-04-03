@@ -45,6 +45,12 @@ export default class extends Controller {
       sectionScore.textContent = "-%"
     }
 
+    this.quantitySectionTarget
+      .querySelectorAll('[data-kpi-quantity-form-target="rowScore"]')
+      .forEach((rowScore) => {
+        rowScore.textContent = "-%"
+      })
+
     const overallOutput = this.quantitySectionTarget.querySelector(".kpi-overall-score span")
     if (overallOutput) {
       overallOutput.textContent = "---"
@@ -63,7 +69,13 @@ export default class extends Controller {
       const weight = this.toNumber(input.dataset.weight)
       if (maxInput <= 0) return sum
 
-      return sum + ((actual / maxInput) * weight)
+      const weightedScore = (actual / maxInput) * weight
+      const rowScore = input.closest("tr")?.querySelector('[data-kpi-quantity-form-target="rowScore"]')
+      if (rowScore) {
+        rowScore.textContent = `${weightedScore.toFixed(2)}%`
+      }
+
+      return sum + weightedScore
     }, 0)
 
     sectionScore.textContent = `${total.toFixed(2)}%`

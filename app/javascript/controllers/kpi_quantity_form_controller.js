@@ -31,7 +31,13 @@ export default class extends Controller {
       const weight = this.toNumber(input.dataset.weight)
       if (maxInput <= 0) return sum
 
-      return sum + ((actual / maxInput) * weight)
+      const weightedScore = (actual / maxInput) * weight
+      const rowScoreOutput = this.rowScoreOutputFor(input)
+      if (rowScoreOutput) {
+        rowScoreOutput.textContent = `${weightedScore.toFixed(2)}%`
+      }
+
+      return sum + weightedScore
     }, 0)
 
     if (this.hasSectionScoreTarget) {
@@ -45,7 +51,11 @@ export default class extends Controller {
   }
 
   scoreInputs() {
-    return Array.from(this.element.querySelectorAll("input.score-input"))
+    return Array.from(this.element.querySelectorAll("input.score-input[data-max-input][data-weight]"))
+  }
+
+  rowScoreOutputFor(input) {
+    return input.closest("tr")?.querySelector('[data-kpi-quantity-form-target="rowScore"]') || null
   }
 
   toNumber(value) {
