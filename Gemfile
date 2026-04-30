@@ -61,7 +61,7 @@ gem 'pundit'
 gem 'ransack'
 
 # dry-rb: functional programming helpers
-gem 'dry-monads', '~> 1.9'
+gem 'dry-monads', '~> 1.10'
 
 # Strong Migrations to help write safe database migrations
 gem 'strong_migrations'
